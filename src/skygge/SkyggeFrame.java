@@ -15,8 +15,12 @@ public class SkyggeFrame extends javax.swing.JFrame {
     /**
      * Creates new form NewJFrame1
      */
-    public SkyggeFrame() {
+    public SkyggeFrame(AudioManager sentenceManager, AudioManager recordingManager) {
         initComponents();
+        
+        sentenceManager.setWaveFormPanel(sentenceWaveFormPanel);
+        recordingManager.setWaveFormPanel(recordingWaveFormPanel);
+
     }
 
     /**
@@ -41,10 +45,10 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        playSentenceButton = new javax.swing.JButton();
-        loopSentenceButton = new javax.swing.JButton();
+        playSentenceButton = new javax.swing.JToggleButton();
+        loopSentenceButton = new javax.swing.JToggleButton();
         filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        sentenceWaveForm = new javax.swing.JPanel();
+        sentenceWaveFormPanel = new skygge.WaveFormPanel();
         jPanel11 = new javax.swing.JPanel();
         filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         showLibraryButton = new javax.swing.JButton();
@@ -54,10 +58,10 @@ public class SkyggeFrame extends javax.swing.JFrame {
         filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
         jPanel12 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
-        playRecordingButton = new javax.swing.JButton();
+        playRecordingButton = new javax.swing.JToggleButton();
         recordRecordingButton = new javax.swing.JToggleButton();
         filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        recordingWaveForm = new javax.swing.JPanel();
+        recordingWaveFormPanel = new skygge.WaveFormPanel();
         jPanel15 = new javax.swing.JPanel();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 32767));
 
@@ -90,7 +94,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(60, 100));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        playSentenceButton.setIcon(new javax.swing.ImageIcon("/Users/json/Dropbox/skygge/icons/media-playback-start.png")); // NOI18N
+        playSentenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-playback-start.png"))); // NOI18N
         playSentenceButton.setPreferredSize(new java.awt.Dimension(50, 50));
         playSentenceButton.setSize(new java.awt.Dimension(50, 50));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -98,36 +102,32 @@ public class SkyggeFrame extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         jPanel2.add(playSentenceButton, gridBagConstraints);
 
-        loopSentenceButton.setIcon(new javax.swing.ImageIcon("/Users/json/Dropbox/skygge/icons/view-refresh.png")); // NOI18N
+        loopSentenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view-refresh.png"))); // NOI18N
         loopSentenceButton.setPreferredSize(new java.awt.Dimension(50, 50));
-        loopSentenceButton.setSize(new java.awt.Dimension(50, 50));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         jPanel2.add(loopSentenceButton, gridBagConstraints);
-
-        filler7.setSize(new java.awt.Dimension(10, 0));
         jPanel2.add(filler7, new java.awt.GridBagConstraints());
 
         jPanel9.add(jPanel2, java.awt.BorderLayout.LINE_START);
 
-        sentenceWaveForm.setBackground(new java.awt.Color(51, 51, 51));
-        sentenceWaveForm.setMaximumSize(new java.awt.Dimension(32767, 100));
-        sentenceWaveForm.setMinimumSize(new java.awt.Dimension(600, 100));
-        sentenceWaveForm.setPreferredSize(new java.awt.Dimension(600, 100));
+        sentenceWaveFormPanel.setMaximumSize(new java.awt.Dimension(32767, 100));
+        sentenceWaveFormPanel.setMinimumSize(new java.awt.Dimension(600, 100));
+        sentenceWaveFormPanel.setPreferredSize(new java.awt.Dimension(600, 100));
 
-        javax.swing.GroupLayout sentenceWaveFormLayout = new javax.swing.GroupLayout(sentenceWaveForm);
-        sentenceWaveForm.setLayout(sentenceWaveFormLayout);
-        sentenceWaveFormLayout.setHorizontalGroup(
-            sentenceWaveFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 681, Short.MAX_VALUE)
+        javax.swing.GroupLayout sentenceWaveFormPanelLayout = new javax.swing.GroupLayout(sentenceWaveFormPanel);
+        sentenceWaveFormPanel.setLayout(sentenceWaveFormPanelLayout);
+        sentenceWaveFormPanelLayout.setHorizontalGroup(
+            sentenceWaveFormPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 679, Short.MAX_VALUE)
         );
-        sentenceWaveFormLayout.setVerticalGroup(
-            sentenceWaveFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+        sentenceWaveFormPanelLayout.setVerticalGroup(
+            sentenceWaveFormPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 98, Short.MAX_VALUE)
         );
 
-        jPanel9.add(sentenceWaveForm, java.awt.BorderLayout.CENTER);
+        jPanel9.add(sentenceWaveFormPanel, java.awt.BorderLayout.CENTER);
 
         jPanel11.setMinimumSize(new java.awt.Dimension(50, 0));
         jPanel11.setLayout(new java.awt.GridBagLayout());
@@ -162,13 +162,12 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel13.setMinimumSize(new java.awt.Dimension(50, 0));
         jPanel13.setLayout(new java.awt.GridBagLayout());
 
-        playRecordingButton.setIcon(new javax.swing.ImageIcon("/Users/json/Dropbox/skygge/icons/media-playback-start.png")); // NOI18N
+        playRecordingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-playback-start.png"))); // NOI18N
         playRecordingButton.setPreferredSize(new java.awt.Dimension(50, 50));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        jPanel13.add(playRecordingButton, gridBagConstraints);
+        playRecordingButton.setSize(new java.awt.Dimension(50, 50));
+        jPanel13.add(playRecordingButton, new java.awt.GridBagConstraints());
 
-        recordRecordingButton.setIcon(new javax.swing.ImageIcon("/Users/json/Dropbox/skygge/icons/media-record.png")); // NOI18N
+        recordRecordingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-record.png"))); // NOI18N
         recordRecordingButton.setMaximumSize(new java.awt.Dimension(50, 50));
         recordRecordingButton.setMinimumSize(new java.awt.Dimension(50, 50));
         recordRecordingButton.setPreferredSize(new java.awt.Dimension(50, 50));
@@ -179,23 +178,22 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         jPanel12.add(jPanel13, java.awt.BorderLayout.LINE_START);
 
-        recordingWaveForm.setBackground(new java.awt.Color(51, 51, 51));
-        recordingWaveForm.setMaximumSize(new java.awt.Dimension(32767, 100));
-        recordingWaveForm.setMinimumSize(new java.awt.Dimension(600, 100));
-        recordingWaveForm.setPreferredSize(new java.awt.Dimension(600, 100));
+        recordingWaveFormPanel.setMaximumSize(new java.awt.Dimension(32767, 100));
+        recordingWaveFormPanel.setMinimumSize(new java.awt.Dimension(600, 100));
+        recordingWaveFormPanel.setPreferredSize(new java.awt.Dimension(600, 100));
 
-        javax.swing.GroupLayout recordingWaveFormLayout = new javax.swing.GroupLayout(recordingWaveForm);
-        recordingWaveForm.setLayout(recordingWaveFormLayout);
-        recordingWaveFormLayout.setHorizontalGroup(
-            recordingWaveFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 681, Short.MAX_VALUE)
+        javax.swing.GroupLayout recordingWaveFormPanelLayout = new javax.swing.GroupLayout(recordingWaveFormPanel);
+        recordingWaveFormPanel.setLayout(recordingWaveFormPanelLayout);
+        recordingWaveFormPanelLayout.setHorizontalGroup(
+            recordingWaveFormPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 679, Short.MAX_VALUE)
         );
-        recordingWaveFormLayout.setVerticalGroup(
-            recordingWaveFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+        recordingWaveFormPanelLayout.setVerticalGroup(
+            recordingWaveFormPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 98, Short.MAX_VALUE)
         );
 
-        jPanel12.add(recordingWaveForm, java.awt.BorderLayout.CENTER);
+        jPanel12.add(recordingWaveFormPanel, java.awt.BorderLayout.CENTER);
 
         jPanel15.setMinimumSize(new java.awt.Dimension(50, 0));
         jPanel15.setLayout(new java.awt.GridBagLayout());
@@ -212,40 +210,6 @@ public class SkyggeFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SkyggeFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SkyggeFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SkyggeFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SkyggeFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SkyggeFrame().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
@@ -270,12 +234,12 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JButton loopSentenceButton;
-    private javax.swing.JButton playRecordingButton;
-    private javax.swing.JButton playSentenceButton;
+    private javax.swing.JToggleButton loopSentenceButton;
+    private javax.swing.JToggleButton playRecordingButton;
+    private javax.swing.JToggleButton playSentenceButton;
     private javax.swing.JToggleButton recordRecordingButton;
-    private javax.swing.JPanel recordingWaveForm;
-    private javax.swing.JPanel sentenceWaveForm;
+    private skygge.WaveFormPanel recordingWaveFormPanel;
+    private skygge.WaveFormPanel sentenceWaveFormPanel;
     private javax.swing.JButton showLibraryButton;
     private javax.swing.JButton showSentenceInfoButton;
     private javax.swing.JLabel statusBarLabel;
