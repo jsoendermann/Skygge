@@ -51,9 +51,7 @@ public class Skygge {
         }
         //</editor-fold>
         
-        AudioManager sentenceManager = new AudioManager();
-        AudioManager recordingManager = new AudioManager();
-        SkyggeFrame frame = new SkyggeFrame(sentenceManager, recordingManager);
+        SkyggeFrame frame = new SkyggeFrame();
         
         frame.setVisible(true);
     }

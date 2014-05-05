@@ -18,127 +18,246 @@
 
 package skygge;
 
-
 import java.io.*;
 import javax.sound.sampled.*;
-import java.net.URL;
-
-public class AudioManager {
-    private byte[] audioData;
-    private WaveFormPanel waveFormPanel;
-    private boolean isRecording;
-    private boolean isPlaying;
 
 
-    private synchronized void setAudioData(byte[] audioData) {
-        System.out.println("setaudiodata");
-        this.audioData = audioData;
+public class AudioManager extends Thread {
+    private static AudioManager audioManagerInstance = null;
 
-        waveFormPanel.setAudioData(audioData);
+    private State currentState;
+    private State nextState;
+
+    // Used for both playing and recording
+    private byte[] buffer;
+    
+    // Used for playing
+    private byte[] audioDataToBePlayed;
+    private AudioInputStream audioInputStream;
+    private SourceDataLine sourceDataLine;
+
+    // Used for recording
+    private TargetDataLine targetDataLine;
+    private ByteArrayOutputStream recordStream;
+    private byte[] recordedAudioData;
+
+
+
+    // Make this class a singleton
+    protected AudioManager() {
+        this.nextState = State.IDLE;
+        this.currentState = State.IDLE;
     }
 
-    public void setWaveFormPanel(WaveFormPanel waveFormPanel) {
-        this.waveFormPanel = waveFormPanel;
+    public static AudioManager getAudioManagerInstance() {
+        if (audioManagerInstance == null) {
+            audioManagerInstance = new AudioManager();
+            audioManagerInstance.start();
+        } 
+        return audioManagerInstance;
     }
 
-    public void startRecording() {
-        System.out.println("startrecording");
-        try {
-        final AudioFormat format = Utils.getFormat();
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-        final TargetDataLine line = (TargetDataLine)AudioSystem.getLine(info);
 
-        line.open(format);
-        line.start();
+    // TODO does this method have to be synchronized?
+    // This method tells the audio manager to stop what it's doing and return
+    // to IDLE state. One it has done so, it sets the audioDataToBePlayed
+    // member and sets the next state to PLAYING, which causes
+    // the audio manager to set up the playing objects
+    public synchronized void startPlaying(byte[] audioDataToBePlayed) {
+        stopEverything();
+        this.audioDataToBePlayed = audioDataToBePlayed;
+        nextState = State.PLAYING;
+    }
 
-        Runnable runner = new Runnable() {
-            int bufferSize = (int)format.getSampleRate() * format.getFrameSize();
-            byte buffer[] = new byte[bufferSize];
+    // TODO does this method have to be synchronized?
+    public synchronized void stopPlaying() {
+        // TODO maybe throw an exception or return false if
+        // the audio manager is not in PLAYING state
+        stopEverything();
+    }
 
-            public void run() {
-                ByteArrayOutputStream recordedSound = new ByteArrayOutputStream();
-                isRecording = true;
-                try {
-                    while (isRecording) {
-                        int count = line.read(buffer, 0, buffer.length);
-                        if (count > 0) {
-                            recordedSound.write(buffer, 0, count);
-                        }
+    public synchronized void startLooping(byte[] audioDataToBePlayed) {
+        stopEverything();
+        this.audioDataToBePlayed = audioDataToBePlayed;
+        nextState = State.LOOPING;
+    }
+
+    public synchronized void stopLooping() {
+        stopEverything();
+    }
+
+
+    public synchronized void startRecording() {
+        stopEverything();
+        nextState = State.RECORDING;
+    }
+
+    public synchronized void stopRecording() {
+        // TODO maybe throw an exception or return false if
+        // the audio manager is not in RECORDING state
+        stopEverything();
+    }
+
+    // TODO should this be synchronized?
+    public byte[] getRecordedAudioData() {
+        return recordedAudioData;
+    }
+
+    // This method blocks until the audio manager stops what it was doing before
+    // and returns to IDLE state
+    public synchronized void stopEverything() {
+        nextState = State.IDLE;
+        while (currentState != State.IDLE)
+            Thread.yield();
+    }
+
+
+    public void run() {
+        while (true) {
+            switch (currentState) {
+                case IDLE: 
+                    if (nextState == State.PLAYING) {
+                        setUpPlayingObjects();
+                        currentState = State.PLAYING;
+                    } else if (nextState == State.LOOPING) {
+                        setUpPlayingObjects();
+                        currentState = State.LOOPING;
+                    } else if (nextState == State.RECORDING) {
+                        setUpRecordingObjects();
+                        currentState = State.RECORDING;
                     }
-                    recordedSound.close();
-                    byte[] audioData = recordedSound.toByteArray();
-                    setAudioData(audioData);
+                    Thread.yield();
+                    break;
+                case PLAYING:
+                    if (nextState == State.IDLE) {
+                        shutDownPlayingObjects();
+                        currentState = State.IDLE;
+                    } else {
+                        play();
+                    }
+                    break;
+                case RECORDING:
+                    if (nextState == State.IDLE) {
+                        shutDownRecordingObjects();
+                        currentState = State.IDLE;
+                    } else {
+                        record();
+                    }
+                    break;
+                case LOOPING:
+                    if (nextState == State.IDLE) {
+                        shutDownPlayingObjects();
+                        currentState = State.IDLE;
+                    } else {
+                        loop();
+                    }
+                    break;
 
-                } catch (IOException e){
-                    // TODO find a way to handle this
-                    System.exit(-1);
-                }
             }
-        };
-
-        Thread captureThread = new Thread(runner);
-        captureThread.start();
-        } catch (Exception e) {
-            System.exit(-1);
         }
     }
 
-    public boolean stopRecording() {
-        boolean wasRecording = isRecording;
-        isRecording = false;
-        
-        // TODO maybe wait with returning until the recording thread has terminated
-        return wasRecording;
-    }
-    
-    public void startPlaying() {
+    private void setUpPlayingObjects() {
+        AudioFormat format = Utils.getFormat();
+
+        // Set up input stream from audioDataToBePlayed
+        InputStream input = new ByteArrayInputStream(audioDataToBePlayed);
+        audioInputStream = new AudioInputStream(input, format, audioDataToBePlayed.length / format.getFrameSize());
+
+        // Set up output Line
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
         try {
-            InputStream input = new ByteArrayInputStream(audioData);
-            final AudioFormat format = Utils.getFormat();
-            final AudioInputStream ais = new AudioInputStream(input, format, audioData.length / format.getFrameSize());
-            DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-            final SourceDataLine line = (SourceDataLine)AudioSystem.getLine(info);
-            line.open(format);
-            line.start();
+            sourceDataLine = (SourceDataLine)AudioSystem.getLine(info);
+            sourceDataLine.open(format);
+            sourceDataLine.start();
+        } catch (Exception e) {
+            // TODO
+            System.exit(-10);
+        }
 
-            Runnable runner = new Runnable() {
-                int bufferSize = (int) format.getSampleRate() * format.getFrameSize();
-                byte buffer[] = new byte[bufferSize];
+        // TODO put magic number somewhere else. make it small so that audio can be cut off quickly
+        buffer = new byte[100];
+    }
 
-                public void run() {
-                    try {
-                        isPlaying = true;
-                        int count;
-                        
-                        while (isPlaying && (count = ais.read(buffer, 0, buffer.length)) != -1) {
-                            if (count > 0) {
-                                line.write(buffer, 0, count);
-                            }
-                                        }
-                        line.drain();
-                        line.close();
-                    } catch (IOException e) {
-                        // TODO handle this
-                        System.exit(-1);
-                        //System.err.println("I/O problems: " + e);
-                        //System.exit(-3);
-                    }
-                }
-            };
-            Thread playThread = new Thread(runner);
-            playThread.start();
-        } catch (LineUnavailableException e) {
-            // TODO handle this
-            System.exit(-1);
-            //System.err.println("Line unavailable: " + e);
-            //System.exit(-4);
+    private void play() {
+        try {
+            int count = audioInputStream.read(buffer, 0, buffer.length);
+            if (count > 0) {
+                sourceDataLine.write(buffer, 0, count);
+            } else {
+                shutDownPlayingObjects();
+                // TODO synchronize this w/ public functions
+                nextState = currentState = State.IDLE;
+            }
+
+        } catch (Exception e) {
+            // TODO
+            System.exit(-11);
         }
     }
-    
-    public boolean stopPlaying() {
-        boolean wasPlaying = isPlaying;
-        isPlaying = false;
-        
-        return wasPlaying;
+
+    private void loop() {
+        try {
+            int count = audioInputStream.read(buffer, 0, buffer.length);
+            if (count > 0) {
+                sourceDataLine.write(buffer, 0, count);
+            } else {
+                audioInputStream.reset();
+            }
+
+        } catch (Exception e) {
+            // TODO
+            System.exit(-11);
+        }
+    }
+
+    private void shutDownPlayingObjects() {
+        sourceDataLine.drain();
+        sourceDataLine.close();
+    }
+
+    private void setUpRecordingObjects() {
+        try {
+            final AudioFormat format = Utils.getFormat();
+
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+            targetDataLine = (TargetDataLine)AudioSystem.getLine(info);
+
+            targetDataLine.open(format);
+            targetDataLine.start();
+
+            recordStream = new ByteArrayOutputStream();
+
+            // TODO put magic number somewhere else. make it small so that audio can be cut off quickly
+            buffer = new byte[100];
+        } catch (Exception e) {
+            System.exit(-12);
+        }
+    }
+
+    private void record() {
+        int count = targetDataLine.read(buffer, 0, buffer.length);
+        if (count > 0) {
+            recordStream.write(buffer, 0, count);
+        } else {
+            shutDownRecordingObjects();
+            // TODO synchronize this w/ public functions
+            nextState = currentState = State.IDLE;
+        }
+    }
+
+    private void shutDownRecordingObjects() {
+        try {
+        recordStream.close();
+        } catch (Exception e) {
+            System.exit(-13);
+        }
+        // TODO close targetDataLine?
+        recordedAudioData = recordStream.toByteArray();
+    }
+
+
+    private enum State {
+        IDLE, PLAYING, LOOPING, RECORDING
     }
 }

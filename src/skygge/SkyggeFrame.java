@@ -13,19 +13,14 @@ import java.awt.event.*;
  */
 public class SkyggeFrame extends javax.swing.JFrame {
     
-    private AudioManager sentenceManager, recordingManager;
+    private byte[] recordedAudioData;
 
     /**
      * Creates new form NewJFrame1
      */
-    public SkyggeFrame(AudioManager sentenceManager, AudioManager recordingManager) {
+    public SkyggeFrame() {
         initComponents();
         
-        this.sentenceManager = sentenceManager;
-        this.recordingManager = recordingManager;
-        
-        sentenceManager.setWaveFormPanel(sentenceWaveFormPanel);
-        recordingManager.setWaveFormPanel(recordingWaveFormPanel);
     }
 
     /**
@@ -50,7 +45,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        playSentenceButton = new javax.swing.JToggleButton();
+        playSentenceButton = new javax.swing.JButton();
         loopSentenceButton = new javax.swing.JToggleButton();
         filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         sentenceWaveFormPanel = new skygge.WaveFormPanel();
@@ -63,7 +58,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         filler5 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 8), new java.awt.Dimension(0, 8), new java.awt.Dimension(32767, 8));
         jPanel12 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
-        playRecordingButton = new javax.swing.JToggleButton();
+        playRecordingButton = new javax.swing.JButton();
         recordRecordingButton = new javax.swing.JToggleButton();
         filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         recordingWaveFormPanel = new skygge.WaveFormPanel();
@@ -102,6 +97,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
         playSentenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-playback-start.png"))); // NOI18N
         playSentenceButton.setPreferredSize(new java.awt.Dimension(50, 50));
         playSentenceButton.setSize(new java.awt.Dimension(50, 50));
+        playSentenceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playSentenceButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -170,9 +170,9 @@ public class SkyggeFrame extends javax.swing.JFrame {
         playRecordingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-playback-start.png"))); // NOI18N
         playRecordingButton.setPreferredSize(new java.awt.Dimension(50, 50));
         playRecordingButton.setSize(new java.awt.Dimension(50, 50));
-        playRecordingButton.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                playRecordingButtonItemStateChanged(evt);
+        playRecordingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                playRecordingButtonActionPerformed(evt);
             }
         });
         jPanel13.add(playRecordingButton, new java.awt.GridBagConstraints());
@@ -227,19 +227,26 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private void recordRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_recordRecordingButtonItemStateChanged
         if(evt.getStateChange() == ItemEvent.SELECTED){
-            recordingManager.startRecording();
+            AudioManager.getAudioManagerInstance().stopEverything();
+            AudioManager.getAudioManagerInstance().startRecording();
         } else if(evt.getStateChange()==ItemEvent.DESELECTED){
-            recordingManager.stopRecording();
+            AudioManager.getAudioManagerInstance().stopEverything();
+            recordedAudioData = AudioManager.getAudioManagerInstance().getRecordedAudioData();
+            recordingWaveFormPanel.setAudioData(recordedAudioData);
         }
     }//GEN-LAST:event_recordRecordingButtonItemStateChanged
 
-    private void playRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_playRecordingButtonItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED){
-            recordingManager.startPlaying();
-        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
-            recordingManager.stopPlaying();
+    private void playSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playSentenceButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_playSentenceButtonActionPerformed
+
+    private void playRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playRecordingButtonActionPerformed
+        if (recordedAudioData != null) {
+            AudioManager.getAudioManagerInstance().stopEverything();
+            AudioManager.getAudioManagerInstance().startPlaying(recordedAudioData);
+            
         }
-    }//GEN-LAST:event_playRecordingButtonItemStateChanged
+    }//GEN-LAST:event_playRecordingButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -266,8 +273,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JToggleButton loopSentenceButton;
-    private javax.swing.JToggleButton playRecordingButton;
-    private javax.swing.JToggleButton playSentenceButton;
+    private javax.swing.JButton playRecordingButton;
+    private javax.swing.JButton playSentenceButton;
     private javax.swing.JToggleButton recordRecordingButton;
     private skygge.WaveFormPanel recordingWaveFormPanel;
     private skygge.WaveFormPanel sentenceWaveFormPanel;
