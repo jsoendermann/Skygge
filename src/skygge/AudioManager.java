@@ -27,9 +27,11 @@ public class AudioManager {
     private byte[] audioData;
     private WaveFormPanel waveFormPanel;
     private boolean isRecording;
+    private boolean isPlaying;
 
 
     private synchronized void setAudioData(byte[] audioData) {
+        System.out.println("setaudiodata");
         this.audioData = audioData;
 
         waveFormPanel.setAudioData(audioData);
@@ -39,7 +41,9 @@ public class AudioManager {
         this.waveFormPanel = waveFormPanel;
     }
 
-    public void startRecording() throws LineUnavailableException {
+    public void startRecording() {
+        System.out.println("startrecording");
+        try {
         final AudioFormat format = Utils.getFormat();
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
         final TargetDataLine line = (TargetDataLine)AudioSystem.getLine(info);
@@ -74,11 +78,67 @@ public class AudioManager {
 
         Thread captureThread = new Thread(runner);
         captureThread.start();
+        } catch (Exception e) {
+            System.exit(-1);
+        }
     }
 
     public boolean stopRecording() {
         boolean wasRecording = isRecording;
         isRecording = false;
+        
+        // TODO maybe wait with returning until the recording thread has terminated
         return wasRecording;
+    }
+    
+    public void startPlaying() {
+        try {
+            InputStream input = new ByteArrayInputStream(audioData);
+            final AudioFormat format = Utils.getFormat();
+            final AudioInputStream ais = new AudioInputStream(input, format, audioData.length / format.getFrameSize());
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+            final SourceDataLine line = (SourceDataLine)AudioSystem.getLine(info);
+            line.open(format);
+            line.start();
+
+            Runnable runner = new Runnable() {
+                int bufferSize = (int) format.getSampleRate() * format.getFrameSize();
+                byte buffer[] = new byte[bufferSize];
+
+                public void run() {
+                    try {
+                        isPlaying = true;
+                        int count;
+                        
+                        while (isPlaying && (count = ais.read(buffer, 0, buffer.length)) != -1) {
+                            if (count > 0) {
+                                line.write(buffer, 0, count);
+                            }
+                                        }
+                        line.drain();
+                        line.close();
+                    } catch (IOException e) {
+                        // TODO handle this
+                        System.exit(-1);
+                        //System.err.println("I/O problems: " + e);
+                        //System.exit(-3);
+                    }
+                }
+            };
+            Thread playThread = new Thread(runner);
+            playThread.start();
+        } catch (LineUnavailableException e) {
+            // TODO handle this
+            System.exit(-1);
+            //System.err.println("Line unavailable: " + e);
+            //System.exit(-4);
+        }
+    }
+    
+    public boolean stopPlaying() {
+        boolean wasPlaying = isPlaying;
+        isPlaying = false;
+        
+        return wasPlaying;
     }
 }

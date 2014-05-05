@@ -6,11 +6,14 @@
 
 package skygge;
 
+import java.awt.event.*;
 /**
  *
  * @author json
  */
 public class SkyggeFrame extends javax.swing.JFrame {
+    
+    private AudioManager sentenceManager, recordingManager;
 
     /**
      * Creates new form NewJFrame1
@@ -18,9 +21,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
     public SkyggeFrame(AudioManager sentenceManager, AudioManager recordingManager) {
         initComponents();
         
+        this.sentenceManager = sentenceManager;
+        this.recordingManager = recordingManager;
+        
         sentenceManager.setWaveFormPanel(sentenceWaveFormPanel);
         recordingManager.setWaveFormPanel(recordingWaveFormPanel);
-
     }
 
     /**
@@ -133,14 +138,14 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel11.setLayout(new java.awt.GridBagLayout());
         jPanel11.add(filler9, new java.awt.GridBagConstraints());
 
-        showLibraryButton.setIcon(new javax.swing.ImageIcon("/Users/json/Dropbox/skygge/icons/music-library.png")); // NOI18N
+        showLibraryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/music-library.png"))); // NOI18N
         showLibraryButton.setPreferredSize(new java.awt.Dimension(50, 50));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         jPanel11.add(showLibraryButton, gridBagConstraints);
 
-        showSentenceInfoButton.setIcon(new javax.swing.ImageIcon("/Users/json/Dropbox/skygge/icons/help-about.png")); // NOI18N
+        showSentenceInfoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/help-about.png"))); // NOI18N
         showSentenceInfoButton.setActionCommand("I");
         showSentenceInfoButton.setPreferredSize(new java.awt.Dimension(50, 50));
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -165,12 +170,22 @@ public class SkyggeFrame extends javax.swing.JFrame {
         playRecordingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-playback-start.png"))); // NOI18N
         playRecordingButton.setPreferredSize(new java.awt.Dimension(50, 50));
         playRecordingButton.setSize(new java.awt.Dimension(50, 50));
+        playRecordingButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                playRecordingButtonItemStateChanged(evt);
+            }
+        });
         jPanel13.add(playRecordingButton, new java.awt.GridBagConstraints());
 
         recordRecordingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-record.png"))); // NOI18N
         recordRecordingButton.setMaximumSize(new java.awt.Dimension(50, 50));
         recordRecordingButton.setMinimumSize(new java.awt.Dimension(50, 50));
         recordRecordingButton.setPreferredSize(new java.awt.Dimension(50, 50));
+        recordRecordingButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                recordRecordingButtonItemStateChanged(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         jPanel13.add(recordRecordingButton, gridBagConstraints);
@@ -209,6 +224,22 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void recordRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_recordRecordingButtonItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED){
+            recordingManager.startRecording();
+        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
+            recordingManager.stopRecording();
+        }
+    }//GEN-LAST:event_recordRecordingButtonItemStateChanged
+
+    private void playRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_playRecordingButtonItemStateChanged
+        if(evt.getStateChange() == ItemEvent.SELECTED){
+            recordingManager.startPlaying();
+        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
+            recordingManager.stopPlaying();
+        }
+    }//GEN-LAST:event_playRecordingButtonItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
