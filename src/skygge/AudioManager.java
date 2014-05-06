@@ -63,30 +63,45 @@ public class AudioManager extends Thread {
     }
 
 
-    public synchronized void startPlaying(byte[] audioDataToBePlayed) {
+    public void startPlaying(byte[] audioDataToBePlayed) {
         stopEverything();
-        this.audioDataToBePlayed = audioDataToBePlayed;
-        nextState = State.PLAYING;
+        synchronized (this) {
+            this.audioDataToBePlayed = audioDataToBePlayed;
+            nextState = State.PLAYING;
+        }
     }
 
-    public synchronized void startLooping(byte[] audioDataToBePlayed) {
+    public void startLooping(byte[] audioDataToBePlayed) {
         stopEverything();
-        this.audioDataToBePlayed = audioDataToBePlayed;
-        nextState = State.LOOPING;
+        synchronized (this) {
+            this.audioDataToBePlayed = audioDataToBePlayed;
+            nextState = State.LOOPING;
+        }
     }
 
 
-    public synchronized void startRecording() {
+    public void startRecording() {
         stopEverything();
-        nextState = State.RECORDING;
+        synchronized (this) {
+            nextState = State.RECORDING;
+        }
     }
 
     // This method blocks until the audio manager has stopped what it 
     // was doing before and returns to the IDLE state
-    public synchronized void stopEverything() {
-        nextState = State.IDLE;
-        while (currentState != State.IDLE)
+    public void stopEverything() {
+        synchronized (this) {
+            nextState = State.IDLE;
+        }
+
+        State currentStateCopy;
+        
+        do {
+            synchronized (this) {
+                currentStateCopy = currentState;
+            }
             Thread.yield();
+        } while (currentStateCopy != State.IDLE);
     }
 
     public synchronized byte[] getRecordedAudioData() {

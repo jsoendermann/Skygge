@@ -239,7 +239,6 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private void recordRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_recordRecordingButtonItemStateChanged
         if(evt.getStateChange() == ItemEvent.SELECTED){
-            AudioManager.getAudioManagerInstance().stopEverything();
             AudioManager.getAudioManagerInstance().startRecording();
         } else if(evt.getStateChange()==ItemEvent.DESELECTED){
             AudioManager.getAudioManagerInstance().stopEverything();
@@ -254,7 +253,6 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private void playRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playRecordingButtonActionPerformed
         if (recordedAudioData != null) {
-            AudioManager.getAudioManagerInstance().stopEverything();
             AudioManager.getAudioManagerInstance().startPlaying(recordedAudioData);
             
         }
