@@ -96,6 +96,9 @@ public class AudioManager extends Thread {
 
         State currentStateCopy;
         
+        // TODO the next loop will loop forever if someone calls one of the 
+        // startXYZ() methods at this point
+        
         do {
             synchronized (this) {
                 currentStateCopy = currentState;
