@@ -30,7 +30,7 @@ public class AudioManager extends Thread {
 
     // Used for both playing and recording
     private byte[] buffer;
-    
+
     // Used for playing
     private byte[] audioDataToBePlayed;
     private AudioInputStream audioInputStream;
@@ -42,8 +42,13 @@ public class AudioManager extends Thread {
     private byte[] recordedAudioData;
 
 
+    private enum State {
+        IDLE, PLAYING, LOOPING, RECORDING
+    }
 
-    // Make this class a singleton
+
+    // This class is a singleton, getAudioManagerInstance() is used
+    // to the the instance
     protected AudioManager() {
         this.nextState = State.IDLE;
         this.currentState = State.IDLE;
@@ -58,22 +63,10 @@ public class AudioManager extends Thread {
     }
 
 
-    // TODO does this method have to be synchronized?
-    // This method tells the audio manager to stop what it's doing and return
-    // to IDLE state. One it has done so, it sets the audioDataToBePlayed
-    // member and sets the next state to PLAYING, which causes
-    // the audio manager to set up the playing objects
     public synchronized void startPlaying(byte[] audioDataToBePlayed) {
         stopEverything();
         this.audioDataToBePlayed = audioDataToBePlayed;
         nextState = State.PLAYING;
-    }
-
-    // TODO does this method have to be synchronized?
-    public synchronized void stopPlaying() {
-        // TODO maybe throw an exception or return false if
-        // the audio manager is not in PLAYING state
-        stopEverything();
     }
 
     public synchronized void startLooping(byte[] audioDataToBePlayed) {
@@ -82,78 +75,115 @@ public class AudioManager extends Thread {
         nextState = State.LOOPING;
     }
 
-    public synchronized void stopLooping() {
-        stopEverything();
-    }
-
 
     public synchronized void startRecording() {
         stopEverything();
         nextState = State.RECORDING;
     }
 
-    public synchronized void stopRecording() {
-        // TODO maybe throw an exception or return false if
-        // the audio manager is not in RECORDING state
-        stopEverything();
-    }
-
-    // TODO should this be synchronized?
-    public byte[] getRecordedAudioData() {
-        return recordedAudioData;
-    }
-
-    // This method blocks until the audio manager stops what it was doing before
-    // and returns to IDLE state
+    // This method blocks until the audio manager has stopped what it 
+    // was doing before and returns to the IDLE state
     public synchronized void stopEverything() {
         nextState = State.IDLE;
         while (currentState != State.IDLE)
             Thread.yield();
     }
 
+    public synchronized byte[] getRecordedAudioData() {
+        return recordedAudioData;
+    }
 
+
+
+    // run is a public method but it is called by the getAudioManagerInstance
     public void run() {
         while (true) {
-            switch (currentState) {
-                case IDLE: 
-                    if (nextState == State.PLAYING) {
-                        setUpPlayingObjects();
-                        currentState = State.PLAYING;
-                    } else if (nextState == State.LOOPING) {
-                        setUpPlayingObjects();
-                        currentState = State.LOOPING;
-                    } else if (nextState == State.RECORDING) {
-                        setUpRecordingObjects();
-                        currentState = State.RECORDING;
-                    }
-                    Thread.yield();
-                    break;
-                case PLAYING:
-                    if (nextState == State.IDLE) {
-                        shutDownPlayingObjects();
-                        currentState = State.IDLE;
-                    } else {
-                        play();
-                    }
-                    break;
-                case RECORDING:
-                    if (nextState == State.IDLE) {
-                        shutDownRecordingObjects();
-                        currentState = State.IDLE;
-                    } else {
-                        record();
-                    }
-                    break;
-                case LOOPING:
-                    if (nextState == State.IDLE) {
-                        shutDownPlayingObjects();
-                        currentState = State.IDLE;
-                    } else {
-                        loop();
-                    }
-                    break;
+            synchronized (this) {
+                switch (currentState) {
+                    case IDLE: 
+                        switch (nextState) {
+                            case PLAYING:
+                                setUpPlayingObjects();
+                                currentState = State.PLAYING;
+                                break;
+                            case LOOPING:
+                                setUpPlayingObjects();
+                                currentState = State.LOOPING;
+                                break;
+                            case RECORDING:
+                                setUpRecordingObjects();
+                                currentState = State.RECORDING;
+                                break;
+                            case IDLE:
+                                break;
+                            }
+                        break;
 
+                    case PLAYING:
+                        switch (nextState) {
+                            case PLAYING:
+                                play();
+                                break;
+                            case IDLE:
+                                shutDownPlayingObjects();
+                                currentState = State.IDLE;
+                                break;
+                            case LOOPING:
+                            case RECORDING:
+                                // This should not happen,
+                                // the class should always go 
+                                // back to the IDLE state before  
+                                // changing to a new state
+                                // TODO handle this
+                                System.exit(-14);
+                                break;
+                        }
+                        break;
+
+                    case LOOPING:
+                        switch (nextState) {
+                            case LOOPING:
+                                loop();
+                                break;
+                            case IDLE:
+                                shutDownPlayingObjects();
+                                currentState = State.IDLE;
+                                break;
+                            case PLAYING:
+                            case RECORDING:
+                                // This should not happen,
+                                // the class should always go 
+                                // back to the IDLE state before  
+                                // changing to a new state
+                                // TODO handle this
+                                System.exit(-15);
+                                break;
+                        }
+                        break;
+
+                    case RECORDING:
+                        switch (nextState) {
+                            case RECORDING:
+                                record();
+                                break;
+                            case IDLE:
+                                shutDownRecordingObjects();
+                                currentState = State.IDLE;
+                                break;
+                            case PLAYING:
+                            case LOOPING:
+                                // This should not happen,
+                                // the class should always go 
+                                // back to the IDLE state before  
+                                // changing to a new state
+                                // TODO handle this
+                                System.exit(-16);
+                                break;
+                        }
+                        break;
+                }
             }
+            Thread.yield();
         }
     }
 
@@ -248,7 +278,7 @@ public class AudioManager extends Thread {
 
     private void shutDownRecordingObjects() {
         try {
-        recordStream.close();
+            recordStream.close();
         } catch (Exception e) {
             System.exit(-13);
         }
@@ -257,7 +287,5 @@ public class AudioManager extends Thread {
     }
 
 
-    private enum State {
-        IDLE, PLAYING, LOOPING, RECORDING
-    }
+
 }
