@@ -84,7 +84,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel16.setLayout(new java.awt.BorderLayout());
         jPanel16.add(filler12, java.awt.BorderLayout.WEST);
 
-        statusBarLabel.setText("Hotkeys: P/L to play/loop sentence, S/R to play/record yourself.");
+        statusBarLabel.setText("Thanks for using Skygge.");
         jPanel16.add(statusBarLabel, java.awt.BorderLayout.CENTER);
         jPanel16.add(filler13, java.awt.BorderLayout.PAGE_END);
 
@@ -121,6 +121,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         loopSentenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view-refresh.png"))); // NOI18N
         loopSentenceButton.setPreferredSize(new java.awt.Dimension(50, 50));
+        loopSentenceButton.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                loopSentenceButtonItemStateChanged(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -152,6 +157,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         showLibraryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/music-library.png"))); // NOI18N
         showLibraryButton.setPreferredSize(new java.awt.Dimension(50, 50));
+        showLibraryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showLibraryButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -160,6 +170,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
         showSentenceInfoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/help-about.png"))); // NOI18N
         showSentenceInfoButton.setActionCommand("I");
         showSentenceInfoButton.setPreferredSize(new java.awt.Dimension(50, 50));
+        showSentenceInfoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showSentenceInfoButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -237,7 +252,44 @@ public class SkyggeFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void deselectToggleButtons() {
+        deselectLoopSentenceButton();
+        deselectRecordRecordingButton();
+    }
+    
+    private void deselectLoopSentenceButton() {
+        loopSentenceButton.setSelected(false);
+    }
+    
+    private void deselectRecordRecordingButton() {
+        recordRecordingButton.setSelected(false);
+    }
+
+
+    private void playSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playSentenceButtonActionPerformed
+        deselectToggleButtons();
+    }//GEN-LAST:event_playSentenceButtonActionPerformed
+
+    private void loopSentenceButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_loopSentenceButtonItemStateChanged
+        //deselectRecordRecordingButton();
+        if(evt.getStateChange() == ItemEvent.SELECTED){
+            ;
+        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
+            ;
+        }
+    }//GEN-LAST:event_loopSentenceButtonItemStateChanged
+
+
+    private void playRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playRecordingButtonActionPerformed
+        deselectToggleButtons();
+        if (recordedAudioData != null) {
+            AudioManager.getAudioManagerInstance().startPlaying(recordedAudioData);
+            
+        }
+    }//GEN-LAST:event_playRecordingButtonActionPerformed
+
     private void recordRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_recordRecordingButtonItemStateChanged
+        //deselectLoopSentenceButton();
         if(evt.getStateChange() == ItemEvent.SELECTED){
             AudioManager.getAudioManagerInstance().startRecording();
         } else if(evt.getStateChange()==ItemEvent.DESELECTED){
@@ -247,16 +299,14 @@ public class SkyggeFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_recordRecordingButtonItemStateChanged
 
-    private void playSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playSentenceButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_playSentenceButtonActionPerformed
 
-    private void playRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playRecordingButtonActionPerformed
-        if (recordedAudioData != null) {
-            AudioManager.getAudioManagerInstance().startPlaying(recordedAudioData);
-            
-        }
-    }//GEN-LAST:event_playRecordingButtonActionPerformed
+    private void showLibraryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showLibraryButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_showLibraryButtonActionPerformed
+
+    private void showSentenceInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSentenceInfoButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_showSentenceInfoButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

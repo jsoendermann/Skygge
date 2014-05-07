@@ -24,6 +24,8 @@ import javax.sound.sampled.*;
 
 public class AudioManager extends Thread {
     private static AudioManager audioManagerInstance = null;
+    
+    private Object stateLock;
 
     private State currentState;
     private State nextState;
@@ -52,6 +54,8 @@ public class AudioManager extends Thread {
     protected AudioManager() {
         this.nextState = State.IDLE;
         this.currentState = State.IDLE;
+        
+        stateLock = new Object();
     }
 
     public static AudioManager getAudioManagerInstance() {
@@ -63,34 +67,34 @@ public class AudioManager extends Thread {
     }
 
 
-    public void startPlaying(byte[] audioDataToBePlayed) {
+    public synchronized void startPlaying(byte[] audioDataToBePlayed) {
         stopEverything();
-        synchronized (this) {
+        synchronized (stateLock) {
             this.audioDataToBePlayed = audioDataToBePlayed;
             nextState = State.PLAYING;
         }
     }
 
-    public void startLooping(byte[] audioDataToBePlayed) {
+    public synchronized void startLooping(byte[] audioDataToBePlayed) {
         stopEverything();
-        synchronized (this) {
+        synchronized (stateLock) {
             this.audioDataToBePlayed = audioDataToBePlayed;
             nextState = State.LOOPING;
         }
     }
 
 
-    public void startRecording() {
+    public synchronized void startRecording() {
         stopEverything();
-        synchronized (this) {
+        synchronized (stateLock) {
             nextState = State.RECORDING;
         }
     }
 
     // This method blocks until the audio manager has stopped what it 
     // was doing before and returns to the IDLE state
-    public void stopEverything() {
-        synchronized (this) {
+    public synchronized void stopEverything() {
+        synchronized (stateLock) {
             nextState = State.IDLE;
         }
 
@@ -100,7 +104,7 @@ public class AudioManager extends Thread {
         // startXYZ() methods at this point
         
         do {
-            synchronized (this) {
+            synchronized (stateLock) {
                 currentStateCopy = currentState;
             }
             Thread.yield();
@@ -116,7 +120,7 @@ public class AudioManager extends Thread {
     // run is a public method but it is called by the getAudioManagerInstance
     public void run() {
         while (true) {
-            synchronized (this) {
+            synchronized (stateLock) {
                 switch (currentState) {
                     case IDLE: 
                         switch (nextState) {
