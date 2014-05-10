@@ -126,6 +126,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
                 loopSentenceButtonItemStateChanged(evt);
             }
         });
+        loopSentenceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loopSentenceButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -213,6 +218,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
                 recordRecordingButtonItemStateChanged(evt);
             }
         });
+        recordRecordingButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recordRecordingButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         jPanel13.add(recordRecordingButton, gridBagConstraints);
@@ -271,32 +281,20 @@ public class SkyggeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_playSentenceButtonActionPerformed
 
     private void loopSentenceButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_loopSentenceButtonItemStateChanged
-        //deselectRecordRecordingButton();
-        if(evt.getStateChange() == ItemEvent.SELECTED){
-            ;
-        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
-            ;
-        }
+        ;
     }//GEN-LAST:event_loopSentenceButtonItemStateChanged
 
 
     private void playRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playRecordingButtonActionPerformed
         deselectToggleButtons();
         if (recordedAudioData != null) {
-            AudioManager.getAudioManagerInstance().startPlaying(recordedAudioData);
+            SoundDeviceManager.getSoundDeviceManagerInstance().startPlaying(recordedAudioData);
             
         }
     }//GEN-LAST:event_playRecordingButtonActionPerformed
 
     private void recordRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_recordRecordingButtonItemStateChanged
-        //deselectLoopSentenceButton();
-        if(evt.getStateChange() == ItemEvent.SELECTED){
-            AudioManager.getAudioManagerInstance().startRecording();
-        } else if(evt.getStateChange()==ItemEvent.DESELECTED){
-            AudioManager.getAudioManagerInstance().stopEverything();
-            recordedAudioData = AudioManager.getAudioManagerInstance().getRecordedAudioData();
-            recordingWaveFormPanel.setAudioData(recordedAudioData);
-        }
+        ;
     }//GEN-LAST:event_recordRecordingButtonItemStateChanged
 
 
@@ -307,6 +305,22 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private void showSentenceInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSentenceInfoButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_showSentenceInfoButtonActionPerformed
+
+    private void loopSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loopSentenceButtonActionPerformed
+        deselectRecordRecordingButton();
+        SoundDeviceManager.getSoundDeviceManagerInstance().stopEverything();
+    }//GEN-LAST:event_loopSentenceButtonActionPerformed
+
+    private void recordRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordRecordingButtonActionPerformed
+        deselectLoopSentenceButton();
+        if(recordRecordingButton.isSelected()){
+            SoundDeviceManager.getSoundDeviceManagerInstance().startRecording();
+        } else {
+            SoundDeviceManager.getSoundDeviceManagerInstance().stopEverything();
+            recordedAudioData = SoundDeviceManager.getSoundDeviceManagerInstance().getRecordedAudioData();
+            recordingWaveFormPanel.setAudioData(recordedAudioData);
+        }
+    }//GEN-LAST:event_recordRecordingButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

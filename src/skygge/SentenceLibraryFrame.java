@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 J. Soendermann
+ * Copyright (C) 2014 json
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,12 +22,12 @@ package skygge;
  *
  * @author json
  */
-public class SentenceLibrary extends javax.swing.JFrame {
+public class SentenceLibraryFrame extends javax.swing.JFrame {
 
     /**
-     * Creates new form SentenceLibrary
+     * Creates new form SentenceLibraryFrame
      */
-    public SentenceLibrary() {
+    public SentenceLibraryFrame() {
         initComponents();
     }
 
@@ -41,43 +41,50 @@ public class SentenceLibrary extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        openButton = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        setsList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jList3 = new javax.swing.JList();
+        sentencesList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(0, 30));
+        jPanel1.setMinimumSize(new java.awt.Dimension(178, 70));
+        jPanel1.setPreferredSize(new java.awt.Dimension(453, 40));
+        jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        jButton1.setText("jButton1");
-        jPanel1.add(jButton1);
+        cancelButton.setText("Cancel");
+        jPanel1.add(cancelButton);
 
-        jButton2.setText("jButton2");
-        jPanel1.add(jButton2);
+        openButton.setText("Open");
+        jPanel1.add(openButton);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
+        getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
-        jList2.setModel(new javax.swing.AbstractListModel() {
+        jSplitPane1.setDividerLocation(100);
+        jSplitPane1.setDividerSize(5);
+        jSplitPane1.setMinimumSize(new java.awt.Dimension(500, 300));
+        jSplitPane1.setPreferredSize(new java.awt.Dimension(500, 300));
+
+        setsList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList2);
+        jScrollPane1.setViewportView(setsList);
 
-        jSplitPane1.setLeftComponent(jScrollPane2);
+        jSplitPane1.setLeftComponent(jScrollPane1);
 
-        jList3.setModel(new javax.swing.AbstractListModel() {
+        sentencesList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane3.setViewportView(jList3);
+        jScrollPane2.setViewportView(sentencesList);
 
-        jSplitPane1.setRightComponent(jScrollPane3);
+        jSplitPane1.setRightComponent(jScrollPane2);
 
         getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -101,32 +108,32 @@ public class SentenceLibrary extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SentenceLibrary.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SentenceLibraryFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SentenceLibrary.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SentenceLibraryFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SentenceLibrary.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SentenceLibraryFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SentenceLibrary.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SentenceLibraryFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SentenceLibrary().setVisible(true);
+                new SentenceLibraryFrame().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JList jList2;
-    private javax.swing.JList jList3;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JButton openButton;
+    private javax.swing.JList sentencesList;
+    private javax.swing.JList setsList;
     // End of variables declaration//GEN-END:variables
 }

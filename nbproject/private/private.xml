@@ -6,9 +6,9 @@
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/Skygge.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/Utils.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/WaveFormPanel.java</file>
-            <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/AudioManager.java</file>
+            <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/SoundDeviceManager.java</file>
+            <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/SentenceLibraryFrame.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/SkyggeFrame.java</file>
-            <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/SentenceLibrary.java</file>
         </group>
     </open-files>
 </project-private>

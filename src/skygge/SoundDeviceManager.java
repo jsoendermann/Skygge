@@ -22,8 +22,8 @@ import java.io.*;
 import javax.sound.sampled.*;
 
 
-public class AudioManager extends Thread {
-    private static AudioManager audioManagerInstance = null;
+public class SoundDeviceManager extends Thread {
+    private static SoundDeviceManager soundDeviceManagerInstance = null;
     
     private Object stateLock;
 
@@ -49,25 +49,26 @@ public class AudioManager extends Thread {
     }
 
 
-    // This class is a singleton, getAudioManagerInstance() is used
+    // This class is a singleton, getSoundDeviceManagerInstance() is used
     // to the the instance
-    protected AudioManager() {
+    protected SoundDeviceManager() {
         this.nextState = State.IDLE;
         this.currentState = State.IDLE;
         
         stateLock = new Object();
     }
 
-    public static AudioManager getAudioManagerInstance() {
-        if (audioManagerInstance == null) {
-            audioManagerInstance = new AudioManager();
-            audioManagerInstance.start();
+    public static SoundDeviceManager getSoundDeviceManagerInstance() {
+        if (soundDeviceManagerInstance == null) {
+            soundDeviceManagerInstance = new SoundDeviceManager();
+            soundDeviceManagerInstance.start();
         } 
-        return audioManagerInstance;
+        return soundDeviceManagerInstance;
     }
 
 
     public synchronized void startPlaying(byte[] audioDataToBePlayed) {
+        System.out.println("startPlaying");
         stopEverything();
         synchronized (stateLock) {
             this.audioDataToBePlayed = audioDataToBePlayed;
@@ -76,6 +77,7 @@ public class AudioManager extends Thread {
     }
 
     public synchronized void startLooping(byte[] audioDataToBePlayed) {
+        System.out.println("startLooping");
         stopEverything();
         synchronized (stateLock) {
             this.audioDataToBePlayed = audioDataToBePlayed;
@@ -85,27 +87,31 @@ public class AudioManager extends Thread {
 
 
     public synchronized void startRecording() {
+        System.out.println("startRecording");
         stopEverything();
         synchronized (stateLock) {
             nextState = State.RECORDING;
         }
     }
 
-    // This method blocks until the audio manager has stopped what it 
+    // This method blocks until the SoundDeviceManager has stopped what it 
     // was doing before and returns to the IDLE state
     public synchronized void stopEverything() {
+        System.out.println("stopEverything");
         synchronized (stateLock) {
             nextState = State.IDLE;
         }
 
         State currentStateCopy;
         
-        // TODO the next loop will loop forever if someone calls one of the 
-        // startXYZ() methods at this point
-        
         do {
             synchronized (stateLock) {
                 currentStateCopy = currentState;
+                
+                // This should not happen
+                if (nextState != State.IDLE) {
+                    System.exit(-20);
+                }
             }
             Thread.yield();
         } while (currentStateCopy != State.IDLE);
@@ -117,7 +123,7 @@ public class AudioManager extends Thread {
 
 
 
-    // run is a public method but it is called by the getAudioManagerInstance
+    // run is a public method but it is called by the getSoundDeviceManagerInstance
     public void run() {
         while (true) {
             synchronized (stateLock) {
