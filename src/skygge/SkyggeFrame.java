@@ -299,7 +299,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
 
     private void showLibraryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showLibraryButtonActionPerformed
-        // TODO add your handling code here:
+        SentenceLibraryFrame sentenceLibraryFrame = new SentenceLibraryFrame();
+        sentenceLibraryFrame.setVisible(true);
     }//GEN-LAST:event_showLibraryButtonActionPerformed
 
     private void showSentenceInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSentenceInfoButtonActionPerformed
@@ -312,12 +313,15 @@ public class SkyggeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_loopSentenceButtonActionPerformed
 
     private void recordRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordRecordingButtonActionPerformed
+        System.out.println();
         deselectLoopSentenceButton();
         if(recordRecordingButton.isSelected()){
             SoundDeviceManager.getSoundDeviceManagerInstance().startRecording();
         } else {
             SoundDeviceManager.getSoundDeviceManagerInstance().stopEverything();
             recordedAudioData = SoundDeviceManager.getSoundDeviceManagerInstance().getRecordedAudioData();
+            AudioNormaliser am = new AudioNormaliser(recordedAudioData);
+            System.out.println(am.getAverageLevel());
             recordingWaveFormPanel.setAudioData(recordedAudioData);
         }
     }//GEN-LAST:event_recordRecordingButtonActionPerformed

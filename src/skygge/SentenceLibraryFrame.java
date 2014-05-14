@@ -49,7 +49,7 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         sentencesList = new javax.swing.JList();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(100, 100));
 
         jPanel1.setMinimumSize(new java.awt.Dimension(178, 70));
         jPanel1.setPreferredSize(new java.awt.Dimension(453, 40));

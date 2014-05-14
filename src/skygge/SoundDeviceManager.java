@@ -68,7 +68,7 @@ public class SoundDeviceManager extends Thread {
 
 
     public synchronized void startPlaying(byte[] audioDataToBePlayed) {
-        System.out.println("startPlaying");
+        //System.out.println("startPlaying");
         stopEverything();
         synchronized (stateLock) {
             this.audioDataToBePlayed = audioDataToBePlayed;
@@ -77,7 +77,7 @@ public class SoundDeviceManager extends Thread {
     }
 
     public synchronized void startLooping(byte[] audioDataToBePlayed) {
-        System.out.println("startLooping");
+        //System.out.println("startLooping");
         stopEverything();
         synchronized (stateLock) {
             this.audioDataToBePlayed = audioDataToBePlayed;
@@ -87,7 +87,7 @@ public class SoundDeviceManager extends Thread {
 
 
     public synchronized void startRecording() {
-        System.out.println("startRecording");
+        //System.out.println("startRecording");
         stopEverything();
         synchronized (stateLock) {
             nextState = State.RECORDING;
@@ -97,14 +97,18 @@ public class SoundDeviceManager extends Thread {
     // This method blocks until the SoundDeviceManager has stopped what it 
     // was doing before and returns to the IDLE state
     public synchronized void stopEverything() {
-        System.out.println("stopEverything");
+        //System.out.println("stopEverything");
         synchronized (stateLock) {
             nextState = State.IDLE;
         }
+        
+        //System.out.println("set next state to idle");
 
         State currentStateCopy;
         
         do {
+        //    System.out.println("entered loop");
+            
             synchronized (stateLock) {
                 currentStateCopy = currentState;
                 
@@ -113,6 +117,9 @@ public class SoundDeviceManager extends Thread {
                     System.exit(-20);
                 }
             }
+            
+         //   System.out.println("left synchronized block in loop");
+         //   System.out.println("currentStateCopy is " + currentStateCopy);
             Thread.yield();
         } while (currentStateCopy != State.IDLE);
     }
@@ -122,11 +129,31 @@ public class SoundDeviceManager extends Thread {
     }
 
 
+    private String stateToString(State s) {
+        switch (s) {
+            case IDLE: return "IDLE";
+            case PLAYING: return "PLAYING";
+            case LOOPING: return "LOOPING";
+            case RECORDING: return "RECORDING";
+            default: return "";
+        }
+    }
 
+    private State lastCurrentState = State.IDLE, lastNextState = State.IDLE;
+    private void printIfChanged() {
+        if (lastCurrentState != currentState || lastNextState != nextState) {
+            System.out.println("currentState: " + stateToString(currentState) +
+                    " nextState: " + stateToString(nextState));
+            lastCurrentState = currentState;
+            lastNextState = nextState;
+        }
+    }
+    
     // run is a public method but it is called by the getSoundDeviceManagerInstance
     public void run() {
         while (true) {
             synchronized (stateLock) {
+                printIfChanged();
                 switch (currentState) {
                     case IDLE: 
                         switch (nextState) {
@@ -210,6 +237,11 @@ public class SoundDeviceManager extends Thread {
                         }
                         break;
                 }
+                /*System.out.println("finished state loop");
+                try {
+                Thread.sleep(333);
+                } catch (Exception e) {}
+                */
             }
             Thread.yield();
         }
@@ -299,7 +331,6 @@ public class SoundDeviceManager extends Thread {
             recordStream.write(buffer, 0, count);
         } else {
             shutDownRecordingObjects();
-            // TODO synchronize this w/ public functions
             nextState = currentState = State.IDLE;
         }
     }
@@ -310,7 +341,9 @@ public class SoundDeviceManager extends Thread {
         } catch (Exception e) {
             System.exit(-13);
         }
-        // TODO close targetDataLine?
+        
+        targetDataLine.close();
+        
         recordedAudioData = recordStream.toByteArray();
     }
 
