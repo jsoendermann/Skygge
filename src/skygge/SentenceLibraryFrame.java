@@ -69,7 +69,7 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         jSplitPane1.setPreferredSize(new java.awt.Dimension(500, 300));
 
         setsList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Loading..." };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -78,7 +78,7 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         jSplitPane1.setLeftComponent(jScrollPane1);
 
         sentencesList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            String[] strings = { "Loading..." };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });

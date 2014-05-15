@@ -320,8 +320,9 @@ public class SkyggeFrame extends javax.swing.JFrame {
         } else {
             SoundDeviceManager.getSoundDeviceManagerInstance().stopEverything();
             recordedAudioData = SoundDeviceManager.getSoundDeviceManagerInstance().getRecordedAudioData();
-            AudioNormaliser am = new AudioNormaliser(recordedAudioData);
+            /*AudioNormaliser am = new AudioNormaliser(recordedAudioData);
             System.out.println(am.getAverageLevel());
+            recordedAudioData = am.getNormalisedAudioData((byte)150);*/
             recordingWaveFormPanel.setAudioData(recordedAudioData);
         }
     }//GEN-LAST:event_recordRecordingButtonActionPerformed
