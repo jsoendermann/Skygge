@@ -18,9 +18,13 @@
 
 package skygge;
 
+import java.io.*;
+import java.net.*;
 import javax.sound.sampled.*;
 
 public class Utils {
+    // TODO put this somewhere else or get rid of it
+    // altogether
     public static AudioFormat getFormat() {
         AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
         float rate = 44100.0F;
@@ -32,6 +36,34 @@ public class Utils {
                 channels, (sampleSize / 8) * channels, rate, bigEndian);
     }
 
+    public static byte[] loadFile(String path) throws IOException {
+        RandomAccessFile f = new RandomAccessFile(path, "r");
+        try {
+            byte[] data = new byte[(int)f.length()];
+            f.readFully(data);
+            return data;
+        } finally {
+            f.close();
+        }
+    }
+    
+    public static byte[] loadUrl(String urlString) throws IOException {
+        URL url = new URL(urlString);
+        ByteArrayOutputStream bais = new ByteArrayOutputStream();
+        
+        InputStream is = null;
+        try {
+            is = url.openStream();
+            byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+            int n;
 
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                bais.write(byteChunk, 0, n);
+            }
+        } finally {
+            if (is != null) { is.close(); }
+        }
+        return bais.toByteArray();
+    }
 }
 

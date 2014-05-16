@@ -24,7 +24,7 @@ import java.awt.event.*;
  * @author json
  */
 public class SkyggeFrame extends javax.swing.JFrame {
-    
+    private byte[] sentenceAudioData;
     private byte[] recordedAudioData;
 
     /**
@@ -32,6 +32,19 @@ public class SkyggeFrame extends javax.swing.JFrame {
      */
     public SkyggeFrame() {
         initComponents();
+        
+        try {
+            
+            sentenceAudioData = Utils.loadUrl("https://skygge.s3.amazonaws.com/animals2/animals2_001.wav");
+            for (int i = 0; i < sentenceAudioData.length; i++)
+                sentenceAudioData[i] += 128;
+            sentenceWaveFormPanel.setAudioData(sentenceAudioData);
+            /*for (byte b : sentenceAudioData)
+                System.out.println(b);*/
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.exit(-20);
+        }
         
     }
 
@@ -78,6 +91,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 32767));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Skygge");
         setLocation(new java.awt.Point(100, 100));
         setResizable(false);
 
@@ -278,10 +292,12 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private void playSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playSentenceButtonActionPerformed
         deselectToggleButtons();
+        SoundDeviceManager.getSoundDeviceManagerInstance().startPlaying(sentenceAudioData);
+        
     }//GEN-LAST:event_playSentenceButtonActionPerformed
 
     private void loopSentenceButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_loopSentenceButtonItemStateChanged
-        ;
+        // TODO remove this function
     }//GEN-LAST:event_loopSentenceButtonItemStateChanged
 
 
@@ -294,7 +310,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_playRecordingButtonActionPerformed
 
     private void recordRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_recordRecordingButtonItemStateChanged
-        ;
+        // TODO remove this function
     }//GEN-LAST:event_recordRecordingButtonItemStateChanged
 
 
@@ -309,7 +325,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private void loopSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loopSentenceButtonActionPerformed
         deselectRecordRecordingButton();
-        SoundDeviceManager.getSoundDeviceManagerInstance().stopEverything();
+        SoundDeviceManager.getSoundDeviceManagerInstance().startLooping(sentenceAudioData);
     }//GEN-LAST:event_loopSentenceButtonActionPerformed
 
     private void recordRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordRecordingButtonActionPerformed
