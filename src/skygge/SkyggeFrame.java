@@ -19,10 +19,9 @@
 package skygge;
 
 import java.awt.event.*;
-/**
- *
- * @author json
- */
+import java.io.*;
+
+
 public class SkyggeFrame extends javax.swing.JFrame {
     private byte[] sentenceAudioData;
     private byte[] recordedAudioData;
@@ -33,18 +32,32 @@ public class SkyggeFrame extends javax.swing.JFrame {
     public SkyggeFrame() {
         initComponents();
         
-        try {
+        Thread checkVersionThread = new Thread() {
+            public void run() {
+                try {
+                    byte[] newestVersionByteArray = Utils.loadUrl("https://skygge.s3.amazonaws.com/newest_version.txt");
+                    String newestVersion = new String(newestVersionByteArray);
+                    
+                    if (!newestVersion.equals(Skygge.VERSION)) {
+                        statusBarLabel.setText("Your version of Skygge is outdated. Go to http://skygge.zaoyin.eu to download the newest version.");
+                    }
+                } catch (IOException e) {
+                    // Do nothing, check version the next time the user is online
+                }
+            }
+        };
+        checkVersionThread.start();
+        
+      /*  try {
             
             sentenceAudioData = Utils.loadUrl("https://skygge.s3.amazonaws.com/animals2/animals2_001.wav");
             for (int i = 0; i < sentenceAudioData.length; i++)
                 sentenceAudioData[i] += 128;
             sentenceWaveFormPanel.setAudioData(sentenceAudioData);
-            /*for (byte b : sentenceAudioData)
-                System.out.println(b);*/
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.exit(-20);
-        }
+        }*/
         
     }
 

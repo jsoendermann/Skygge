@@ -23,6 +23,7 @@ package skygge;
  * @author json
  */
 public class Skygge {
+    public static final String VERSION = "0.10.0";
 
     /**
      * @param args the command line arguments
