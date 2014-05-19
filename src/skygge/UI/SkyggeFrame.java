@@ -51,16 +51,20 @@ public class SkyggeFrame extends javax.swing.JFrame {
         };
         checkVersionThread.start();
         
-      /*  try {
+        try {
             
-            sentenceAudioData = Utils.loadUrl("https://skygge.s3.amazonaws.com/animals2/animals2_001.wav");
+            sentenceAudioData = Utils.loadUrl("https://skygge.s3.amazonaws.com/sentence-packs/animals2/animals2_001.wav");
             for (int i = 0; i < sentenceAudioData.length; i++)
                 sentenceAudioData[i] += 128;
             sentenceWaveFormPanel.setAudioData(sentenceAudioData);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.exit(-20);
-        }*/
+        }
+        
+        if (System.getProperty("os.name").contains("Mac")) {
+  System.setProperty("apple.laf.useScreenMenuBar", "true");
+}
         
     }
 
@@ -105,6 +109,10 @@ public class SkyggeFrame extends javax.swing.JFrame {
         recordingWaveFormPanel = new skygge.UI.WaveFormPanel();
         jPanel15 = new javax.swing.JPanel();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 32767));
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Skygge");
@@ -137,6 +145,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         playSentenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-playback-start.png"))); // NOI18N
+        playSentenceButton.setMnemonic('P');
         playSentenceButton.setPreferredSize(new java.awt.Dimension(50, 50));
         playSentenceButton.setSize(new java.awt.Dimension(50, 50));
         playSentenceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -289,6 +298,25 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         getContentPane().add(jPanel7, java.awt.BorderLayout.CENTER);
 
+        jMenu1.setMnemonic('F');
+        jMenu1.setText("File");
+
+        jMenuItem1.setMnemonic('P');
+        jMenuItem1.setText("Play Sentence");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -359,6 +387,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_recordRecordingButtonActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        deselectToggleButtons();
+        SoundDeviceManager.getSoundDeviceManagerInstance().startPlaying(sentenceAudioData);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;
@@ -373,6 +406,10 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler6;
     private javax.swing.Box.Filler filler7;
     private javax.swing.Box.Filler filler9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
