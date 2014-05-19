@@ -287,7 +287,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="skygge.Frames.WaveFormPanel" name="sentenceWaveFormPanel">
+                <Container class="skygge.UI.WaveFormPanel" name="sentenceWaveFormPanel">
                   <Properties>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[32767, 100]"/>
@@ -523,7 +523,7 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Container class="skygge.Frames.WaveFormPanel" name="recordingWaveFormPanel">
+                <Container class="skygge.UI.WaveFormPanel" name="recordingWaveFormPanel">
                   <Properties>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[32767, 100]"/>

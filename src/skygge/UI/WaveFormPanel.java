@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package skygge.Frames;
+package skygge.UI;
 
 import javax.swing.*;
 import java.awt.*;

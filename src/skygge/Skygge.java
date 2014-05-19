@@ -18,7 +18,7 @@
 
 package skygge;
 
-import skygge.Frames.SkyggeFrame;
+import skygge.UI.SkyggeFrame;
 
 /**
  *
