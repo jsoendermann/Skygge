@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package skygge;
+package skygge.Frames;
 
 /**
  *
@@ -48,8 +48,6 @@ public class LoadingFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(275, 90));
-        setPreferredSize(new java.awt.Dimension(275, 90));
-        setSize(new java.awt.Dimension(275, 90));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Loading...");

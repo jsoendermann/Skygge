@@ -16,10 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package skygge;
+package skygge.Frames;
 
 import java.awt.event.*;
 import java.io.*;
+import skygge.Skygge;
+import skygge.SoundDeviceManager;
+import skygge.Utils;
 
 
 public class SkyggeFrame extends javax.swing.JFrame {
@@ -39,7 +42,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
                     String newestVersion = new String(newestVersionByteArray);
                     
                     if (!newestVersion.equals(Skygge.VERSION)) {
-                        statusBarLabel.setText("Your version of Skygge is outdated. Go to http://skygge.zaoyin.eu to download the newest version.");
+                        statusBarLabel.setText("Your version of Skygge is outdated. To update, please go to http://skygge.zaoyin.eu.");
                     }
                 } catch (IOException e) {
                     // Do nothing, check version the next time the user is online
@@ -86,7 +89,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         playSentenceButton = new javax.swing.JButton();
         loopSentenceButton = new javax.swing.JToggleButton();
         filler7 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        sentenceWaveFormPanel = new skygge.WaveFormPanel();
+        sentenceWaveFormPanel = new skygge.Frames.WaveFormPanel();
         jPanel11 = new javax.swing.JPanel();
         filler9 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         showLibraryButton = new javax.swing.JButton();
@@ -99,7 +102,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         playRecordingButton = new javax.swing.JButton();
         recordRecordingButton = new javax.swing.JToggleButton();
         filler10 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
-        recordingWaveFormPanel = new skygge.WaveFormPanel();
+        recordingWaveFormPanel = new skygge.Frames.WaveFormPanel();
         jPanel15 = new javax.swing.JPanel();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 32767));
 
@@ -384,8 +387,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private javax.swing.JButton playRecordingButton;
     private javax.swing.JButton playSentenceButton;
     private javax.swing.JToggleButton recordRecordingButton;
-    private skygge.WaveFormPanel recordingWaveFormPanel;
-    private skygge.WaveFormPanel sentenceWaveFormPanel;
+    private skygge.Frames.WaveFormPanel recordingWaveFormPanel;
+    private skygge.Frames.WaveFormPanel sentenceWaveFormPanel;
     private javax.swing.JButton showLibraryButton;
     private javax.swing.JButton showSentenceInfoButton;
     private javax.swing.JLabel statusBarLabel;

@@ -18,6 +18,8 @@
 
 package skygge;
 
+import skygge.Frames.SkyggeFrame;
+
 /**
  *
  * @author json
