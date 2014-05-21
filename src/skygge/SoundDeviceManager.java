@@ -23,7 +23,7 @@ import javax.sound.sampled.*;
 
 
 public class SoundDeviceManager extends Thread {
-    private static SoundDeviceManager soundDeviceManagerInstance = null;
+    private static SoundDeviceManager instance = null;
     
     private Object stateLock;
 
@@ -49,7 +49,7 @@ public class SoundDeviceManager extends Thread {
     }
 
 
-    // This class is a singleton, getSoundDeviceManagerInstance() is used
+    // This class is a singleton, getInstance() is used
     // to the the instance
     protected SoundDeviceManager() {
         this.nextState = State.IDLE;
@@ -58,12 +58,12 @@ public class SoundDeviceManager extends Thread {
         stateLock = new Object();
     }
 
-    public static SoundDeviceManager getSoundDeviceManagerInstance() {
-        if (soundDeviceManagerInstance == null) {
-            soundDeviceManagerInstance = new SoundDeviceManager();
-            soundDeviceManagerInstance.start();
+    public static SoundDeviceManager getInstance() {
+        if (instance == null) {
+            instance = new SoundDeviceManager();
+            instance.start();
         } 
-        return soundDeviceManagerInstance;
+        return instance;
     }
 
 
@@ -149,7 +149,7 @@ public class SoundDeviceManager extends Thread {
         }
     }
     
-    // run is a public method but it is called by the getSoundDeviceManagerInstance
+    // run is a public method but it is called by the getInstance
     public void run() {
         while (true) {
             synchronized (stateLock) {

@@ -25,7 +25,7 @@ import skygge.UI.SkyggeFrame;
  * @author json
  */
 public class Skygge {
-    public static final String VERSION = "0.10.0";
+    public static final String VERSION = "0.11.0";
 
     /**
      * @param args the command line arguments

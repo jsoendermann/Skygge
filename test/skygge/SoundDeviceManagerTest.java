@@ -51,13 +51,13 @@ public class SoundDeviceManagerTest {
     }
 
     /**
-     * Test of getSoundDeviceManagerInstance method, of class SoundDeviceManager.
+     * Test of getInstance method, of class SoundDeviceManager.
      */
     @Test
     public void testGetSoundDeviceManagerInstance() {
         System.out.println("getSoundDeviceManagerInstance");
         SoundDeviceManager expResult = null;
-        SoundDeviceManager result = SoundDeviceManager.getSoundDeviceManagerInstance();
+        SoundDeviceManager result = SoundDeviceManager.getInstance();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

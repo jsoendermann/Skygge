@@ -20,6 +20,7 @@ package skygge.UI;
 
 import java.awt.event.*;
 import java.io.*;
+import javax.swing.*;
 import skygge.Skygge;
 import skygge.SoundDeviceManager;
 import skygge.Utils;
@@ -62,11 +63,36 @@ public class SkyggeFrame extends javax.swing.JFrame {
             System.exit(-20);
         }
         
-        if (System.getProperty("os.name").contains("Mac")) {
-  System.setProperty("apple.laf.useScreenMenuBar", "true");
-}
+        InputMap inputMap = rootPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        inputMap.put(KeyStroke.getKeyStroke('a'), "play sentence button clicked");
+        inputMap.put(KeyStroke.getKeyStroke('s'), "loop sentence button clicked");
+        inputMap.put(KeyStroke.getKeyStroke('d'), "play recording button clicked");
+        inputMap.put(KeyStroke.getKeyStroke('f'), "record recording button clicked");
         
+        ActionMap actionMap = rootPanel.getActionMap();
+        actionMap.put("play sentence button clicked", new PressButtonAction(playSentenceButton));
+        actionMap.put("loop sentence button clicked", new PressButtonAction(loopSentenceButton));
+        actionMap.put("play recording button clicked", new PressButtonAction(playRecordingButton));
+        actionMap.put("record recording button clicked", new PressButtonAction(recordRecordingButton));  
     }
+    
+    class PressButtonAction extends AbstractAction {
+        AbstractButton button;
+        
+        public PressButtonAction(AbstractButton button) {
+            this.button = button;
+        }
+        public void actionPerformed(ActionEvent e) {
+            button.doClick();
+        }
+    }
+    
+    class RecordAction extends AbstractAction {
+        public void actionPerformed(ActionEvent e) {
+            SoundDeviceManager.getInstance().startPlaying(recordedAudioData);
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -78,10 +104,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jPanel16 = new javax.swing.JPanel();
-        filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
-        statusBarLabel = new javax.swing.JLabel();
-        filler13 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
+        rootPanel = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
         filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 0), new java.awt.Dimension(10, 32767));
@@ -109,24 +132,17 @@ public class SkyggeFrame extends javax.swing.JFrame {
         recordingWaveFormPanel = new skygge.UI.WaveFormPanel();
         jPanel15 = new javax.swing.JPanel();
         filler11 = new javax.swing.Box.Filler(new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 0), new java.awt.Dimension(60, 32767));
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jPanel16 = new javax.swing.JPanel();
+        filler12 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
+        statusBarLabel = new javax.swing.JLabel();
+        filler13 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 5), new java.awt.Dimension(0, 5), new java.awt.Dimension(32767, 5));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Skygge");
         setLocation(new java.awt.Point(100, 100));
         setResizable(false);
 
-        jPanel16.setLayout(new java.awt.BorderLayout());
-        jPanel16.add(filler12, java.awt.BorderLayout.WEST);
-
-        statusBarLabel.setText("Thanks for using Skygge.");
-        jPanel16.add(statusBarLabel, java.awt.BorderLayout.CENTER);
-        jPanel16.add(filler13, java.awt.BorderLayout.PAGE_END);
-
-        getContentPane().add(jPanel16, java.awt.BorderLayout.SOUTH);
+        rootPanel.setLayout(new java.awt.BorderLayout());
 
         jPanel7.setLayout(new java.awt.BorderLayout());
         jPanel7.add(filler1, java.awt.BorderLayout.LINE_START);
@@ -160,11 +176,6 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         loopSentenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view-refresh.png"))); // NOI18N
         loopSentenceButton.setPreferredSize(new java.awt.Dimension(50, 50));
-        loopSentenceButton.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                loopSentenceButtonItemStateChanged(evt);
-            }
-        });
         loopSentenceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loopSentenceButtonActionPerformed(evt);
@@ -252,11 +263,6 @@ public class SkyggeFrame extends javax.swing.JFrame {
         recordRecordingButton.setMaximumSize(new java.awt.Dimension(50, 50));
         recordRecordingButton.setMinimumSize(new java.awt.Dimension(50, 50));
         recordRecordingButton.setPreferredSize(new java.awt.Dimension(50, 50));
-        recordRecordingButton.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                recordRecordingButtonItemStateChanged(evt);
-            }
-        });
         recordRecordingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 recordRecordingButtonActionPerformed(evt);
@@ -296,26 +302,18 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         jPanel7.add(jPanel8, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(jPanel7, java.awt.BorderLayout.CENTER);
+        rootPanel.add(jPanel7, java.awt.BorderLayout.CENTER);
 
-        jMenu1.setMnemonic('F');
-        jMenu1.setText("File");
+        jPanel16.setLayout(new java.awt.BorderLayout());
+        jPanel16.add(filler12, java.awt.BorderLayout.WEST);
 
-        jMenuItem1.setMnemonic('P');
-        jMenuItem1.setText("Play Sentence");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
+        statusBarLabel.setText("Hotkeys: 'a' to play sentence, 's' to loop sentence, 'd' to play recording, 'f' to record. (All without Alt/Ctrl.)");
+        jPanel16.add(statusBarLabel, java.awt.BorderLayout.CENTER);
+        jPanel16.add(filler13, java.awt.BorderLayout.PAGE_END);
 
-        jMenuBar1.add(jMenu1);
+        rootPanel.add(jPanel16, java.awt.BorderLayout.SOUTH);
 
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
+        getContentPane().add(rootPanel, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -336,26 +334,18 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private void playSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playSentenceButtonActionPerformed
         deselectToggleButtons();
-        SoundDeviceManager.getSoundDeviceManagerInstance().startPlaying(sentenceAudioData);
+        SoundDeviceManager.getInstance().startPlaying(sentenceAudioData);
         
     }//GEN-LAST:event_playSentenceButtonActionPerformed
-
-    private void loopSentenceButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_loopSentenceButtonItemStateChanged
-        // TODO remove this function
-    }//GEN-LAST:event_loopSentenceButtonItemStateChanged
 
 
     private void playRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playRecordingButtonActionPerformed
         deselectToggleButtons();
         if (recordedAudioData != null) {
-            SoundDeviceManager.getSoundDeviceManagerInstance().startPlaying(recordedAudioData);
+            SoundDeviceManager.getInstance().startPlaying(recordedAudioData);
             
         }
     }//GEN-LAST:event_playRecordingButtonActionPerformed
-
-    private void recordRecordingButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_recordRecordingButtonItemStateChanged
-        // TODO remove this function
-    }//GEN-LAST:event_recordRecordingButtonItemStateChanged
 
 
     private void showLibraryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showLibraryButtonActionPerformed
@@ -369,28 +359,26 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private void loopSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loopSentenceButtonActionPerformed
         deselectRecordRecordingButton();
-        SoundDeviceManager.getSoundDeviceManagerInstance().startLooping(sentenceAudioData);
+        if (loopSentenceButton.isSelected())
+            SoundDeviceManager.getInstance().startLooping(sentenceAudioData);
+        else
+            SoundDeviceManager.getInstance().stopEverything();
     }//GEN-LAST:event_loopSentenceButtonActionPerformed
 
     private void recordRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordRecordingButtonActionPerformed
         System.out.println();
         deselectLoopSentenceButton();
         if(recordRecordingButton.isSelected()){
-            SoundDeviceManager.getSoundDeviceManagerInstance().startRecording();
+            SoundDeviceManager.getInstance().startRecording();
         } else {
-            SoundDeviceManager.getSoundDeviceManagerInstance().stopEverything();
-            recordedAudioData = SoundDeviceManager.getSoundDeviceManagerInstance().getRecordedAudioData();
+            SoundDeviceManager.getInstance().stopEverything();
+            recordedAudioData = SoundDeviceManager.getInstance().getRecordedAudioData();
             /*AudioNormaliser am = new AudioNormaliser(recordedAudioData);
             System.out.println(am.getAverageLevel());
             recordedAudioData = am.getNormalisedAudioData((byte)150);*/
             recordingWaveFormPanel.setAudioData(recordedAudioData);
         }
     }//GEN-LAST:event_recordRecordingButtonActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        deselectToggleButtons();
-        SoundDeviceManager.getSoundDeviceManagerInstance().startPlaying(sentenceAudioData);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -406,10 +394,6 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private javax.swing.Box.Filler filler6;
     private javax.swing.Box.Filler filler7;
     private javax.swing.Box.Filler filler9;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
@@ -425,6 +409,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private javax.swing.JButton playSentenceButton;
     private javax.swing.JToggleButton recordRecordingButton;
     private skygge.UI.WaveFormPanel recordingWaveFormPanel;
+    private javax.swing.JPanel rootPanel;
     private skygge.UI.WaveFormPanel sentenceWaveFormPanel;
     private javax.swing.JButton showLibraryButton;
     private javax.swing.JButton showSentenceInfoButton;
