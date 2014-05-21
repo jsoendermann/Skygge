@@ -574,7 +574,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="statusBarLabel">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Hotkeys: &apos;a&apos; to play sentence, &apos;s&apos; to loop sentence, &apos;d&apos; to play recording, &apos;f&apos; to record. (All without Alt/Ctrl.)"/>
+                <Property name="text" type="java.lang.String" value=" "/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

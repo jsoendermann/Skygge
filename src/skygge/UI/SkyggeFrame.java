@@ -18,12 +18,15 @@
 
 package skygge.UI;
 
+import com.json.parsers.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.*;
 import javax.swing.*;
 import skygge.Skygge;
 import skygge.SoundDeviceManager;
 import skygge.Utils;
+
 
 
 public class SkyggeFrame extends javax.swing.JFrame {
@@ -39,11 +42,21 @@ public class SkyggeFrame extends javax.swing.JFrame {
         Thread checkVersionThread = new Thread() {
             public void run() {
                 try {
-                    byte[] newestVersionByteArray = Utils.loadUrl("https://skygge.s3.amazonaws.com/newest_version.txt");
-                    String newestVersion = new String(newestVersionByteArray);
+                    
+                    byte[] skyggeInfoByteArray = Utils.loadUrl("https://skygge.s3.amazonaws.com/skyyge_info.json");
+                    String skyggeInfoString = new String(skyggeInfoByteArray);
+                    
+                    JsonParserFactory factory=JsonParserFactory.getInstance();
+                    JSONParser parser=factory.newJsonParser();
+                    Map skyggeInfoData=parser.parseJson(skyggeInfoString);
+                    
+                    String newestVersion = (String)skyggeInfoData.get("newest_version");
+                    String messageOfTheDay = (String)skyggeInfoData.get("message_of_the_day");
                     
                     if (!newestVersion.equals(Skygge.VERSION)) {
                         statusBarLabel.setText("Your version of Skygge is outdated. To update, please go to http://skygge.zaoyin.eu.");
+                    } else {
+                        statusBarLabel.setText(messageOfTheDay);
                     }
                 } catch (IOException e) {
                     // Do nothing, check version the next time the user is online
@@ -307,7 +320,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel16.setLayout(new java.awt.BorderLayout());
         jPanel16.add(filler12, java.awt.BorderLayout.WEST);
 
-        statusBarLabel.setText("Hotkeys: 'a' to play sentence, 's' to loop sentence, 'd' to play recording, 'f' to record. (All without Alt/Ctrl.)");
+        statusBarLabel.setText(" ");
         jPanel16.add(statusBarLabel, java.awt.BorderLayout.CENTER);
         jPanel16.add(filler13, java.awt.BorderLayout.PAGE_END);
 
