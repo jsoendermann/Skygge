@@ -18,6 +18,9 @@
 
 package skygge.UI;
 
+import java.awt.*;
+import java.io.IOException;
+
 /**
  *
  * @author json
@@ -29,6 +32,17 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
      */
     public SentenceLibraryFrame() {
         initComponents();
+        
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                /*try {
+                    loadUrlIntoString("https://skygge.s3.amazonaws.com/sentence_data.json");
+                } catch (IOException e) {
+                    System.exit(-31);
+                }*/
+            }
+        });
+        
     }
 
     /**
@@ -45,9 +59,9 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         openButton = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        setsList = new javax.swing.JList();
+        sentencePackList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
-        sentencesList = new javax.swing.JList();
+        sentenceList = new javax.swing.JList();
 
         setLocation(new java.awt.Point(100, 100));
 
@@ -68,21 +82,21 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         jSplitPane1.setMinimumSize(new java.awt.Dimension(500, 300));
         jSplitPane1.setPreferredSize(new java.awt.Dimension(500, 300));
 
-        setsList.setModel(new javax.swing.AbstractListModel() {
+        sentencePackList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Loading..." };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(setsList);
+        jScrollPane1.setViewportView(sentencePackList);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
 
-        sentencesList.setModel(new javax.swing.AbstractListModel() {
+        sentenceList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Loading..." };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(sentencesList);
+        jScrollPane2.setViewportView(sentenceList);
 
         jSplitPane1.setRightComponent(jScrollPane2);
 
@@ -91,40 +105,6 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SentenceLibraryFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SentenceLibraryFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SentenceLibraryFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SentenceLibraryFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new SentenceLibraryFrame().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
@@ -133,7 +113,7 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JButton openButton;
-    private javax.swing.JList sentencesList;
-    private javax.swing.JList setsList;
+    private javax.swing.JList sentenceList;
+    private javax.swing.JList sentencePackList;
     // End of variables declaration//GEN-END:variables
 }

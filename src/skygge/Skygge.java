@@ -55,7 +55,6 @@ public class Skygge {
         //</editor-fold>
         
         SkyggeFrame frame = new SkyggeFrame();
-        
         frame.setVisible(true);
     }
     

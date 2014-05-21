@@ -47,7 +47,7 @@ public class Utils {
         }
     }
     
-    public static byte[] loadUrl(String urlString) throws IOException {
+    public static byte[] loadUrlIntoByteArray(String urlString) throws IOException {
         URL url = new URL(urlString);
         ByteArrayOutputStream bais = new ByteArrayOutputStream();
         
@@ -64,6 +64,10 @@ public class Utils {
             if (is != null) { is.close(); }
         }
         return bais.toByteArray();
+    }
+    
+    public static String loadUrlIntoString(String urlString) throws IOException {
+        return new String(loadUrlIntoByteArray(urlString));
     }
 }
 

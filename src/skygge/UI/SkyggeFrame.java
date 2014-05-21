@@ -19,6 +19,7 @@
 package skygge.UI;
 
 import com.json.parsers.*;
+import java.awt.Font;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
@@ -32,6 +33,8 @@ import skygge.Utils;
 public class SkyggeFrame extends javax.swing.JFrame {
     private byte[] sentenceAudioData;
     private byte[] recordedAudioData;
+    
+    private SentenceLibraryFrame sentenceLibraryFrame;
 
     /**
      * Creates new form NewJFrame1
@@ -39,11 +42,13 @@ public class SkyggeFrame extends javax.swing.JFrame {
     public SkyggeFrame() {
         initComponents();
         
+        sentenceLibraryFrame = new SentenceLibraryFrame();
+        
         Thread checkVersionThread = new Thread() {
             public void run() {
                 try {
                     
-                    byte[] skyggeInfoByteArray = Utils.loadUrl("https://skygge.s3.amazonaws.com/skyyge_info.json");
+                    byte[] skyggeInfoByteArray = Utils.loadUrlIntoByteArray("https://skygge.s3.amazonaws.com/skyyge_info.json");
                     String skyggeInfoString = new String(skyggeInfoByteArray);
                     
                     JsonParserFactory factory=JsonParserFactory.getInstance();
@@ -55,6 +60,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
                     
                     if (!newestVersion.equals(Skygge.VERSION)) {
                         statusBarLabel.setText("Your version of Skygge is outdated. To update, please go to http://skygge.zaoyin.eu.");
+                        Font font = statusBarLabel.getFont();
+                        statusBarLabel.setFont(new Font(font.getFontName(), Font.PLAIN, font.getSize()));
                     } else {
                         statusBarLabel.setText(messageOfTheDay);
                     }
@@ -67,7 +74,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         
         try {
             
-            sentenceAudioData = Utils.loadUrl("https://skygge.s3.amazonaws.com/sentence-packs/animals2/animals2_001.wav");
+            sentenceAudioData = Utils.loadUrlIntoByteArray("https://skygge.s3.amazonaws.com/sentence-packs/chinese/animals2/animals2_001.wav");
             for (int i = 0; i < sentenceAudioData.length; i++)
                 sentenceAudioData[i] += 128;
             sentenceWaveFormPanel.setAudioData(sentenceAudioData);
@@ -175,6 +182,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         playSentenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-playback-start.png"))); // NOI18N
         playSentenceButton.setMnemonic('P');
+        playSentenceButton.setToolTipText("Play the sentence. Hotkey: 'a'");
         playSentenceButton.setPreferredSize(new java.awt.Dimension(50, 50));
         playSentenceButton.setSize(new java.awt.Dimension(50, 50));
         playSentenceButton.addActionListener(new java.awt.event.ActionListener() {
@@ -188,6 +196,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel2.add(playSentenceButton, gridBagConstraints);
 
         loopSentenceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view-refresh.png"))); // NOI18N
+        loopSentenceButton.setToolTipText("Start/stop looping the sentence. Hotkey: 's'");
         loopSentenceButton.setPreferredSize(new java.awt.Dimension(50, 50));
         loopSentenceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -263,6 +272,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel13.setLayout(new java.awt.GridBagLayout());
 
         playRecordingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-playback-start.png"))); // NOI18N
+        playRecordingButton.setToolTipText("Play the recording. Hotkey: 'd'");
+        playRecordingButton.setEnabled(false);
         playRecordingButton.setPreferredSize(new java.awt.Dimension(50, 50));
         playRecordingButton.setSize(new java.awt.Dimension(50, 50));
         playRecordingButton.addActionListener(new java.awt.event.ActionListener() {
@@ -273,6 +284,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel13.add(playRecordingButton, new java.awt.GridBagConstraints());
 
         recordRecordingButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/media-record.png"))); // NOI18N
+        recordRecordingButton.setToolTipText("Record yourself. Hotkey: 'f'");
         recordRecordingButton.setMaximumSize(new java.awt.Dimension(50, 50));
         recordRecordingButton.setMinimumSize(new java.awt.Dimension(50, 50));
         recordRecordingButton.setPreferredSize(new java.awt.Dimension(50, 50));
@@ -354,6 +366,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private void playRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playRecordingButtonActionPerformed
         deselectToggleButtons();
+        SoundDeviceManager.getInstance().stopEverything();
+        
+        recordedAudioData = SoundDeviceManager.getInstance().getRecordedAudioData();
+        recordingWaveFormPanel.setAudioData(recordedAudioData);
+        
         if (recordedAudioData != null) {
             SoundDeviceManager.getInstance().startPlaying(recordedAudioData);
             
@@ -379,7 +396,6 @@ public class SkyggeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_loopSentenceButtonActionPerformed
 
     private void recordRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordRecordingButtonActionPerformed
-        System.out.println();
         deselectLoopSentenceButton();
         if(recordRecordingButton.isSelected()){
             SoundDeviceManager.getInstance().startRecording();
@@ -390,6 +406,9 @@ public class SkyggeFrame extends javax.swing.JFrame {
             System.out.println(am.getAverageLevel());
             recordedAudioData = am.getNormalisedAudioData((byte)150);*/
             recordingWaveFormPanel.setAudioData(recordedAudioData);
+        }
+        if (!playRecordingButton.isEnabled()) {
+            playRecordingButton.setEnabled(true);
         }
     }//GEN-LAST:event_recordRecordingButtonActionPerformed
 
