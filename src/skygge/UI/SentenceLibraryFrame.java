@@ -152,6 +152,11 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
+        sentenceList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sentenceListMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(sentenceList);
 
         jSplitPane1.setRightComponent(jScrollPane2);
@@ -162,9 +167,7 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
-        Sentence selectedSentence = (Sentence)sentenceList.getSelectedValue();
-        skyggeFrame.loadSentence(selectedSentence);
-        this.setVisible(false);
+        loadSentence();
     }//GEN-LAST:event_openButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -177,6 +180,17 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_sentencePackListValueChanged
 
+    private void sentenceListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sentenceListMouseClicked
+        if (evt.getClickCount() == 2) {
+            loadSentence();
+        }
+    }//GEN-LAST:event_sentenceListMouseClicked
+
+    private void loadSentence() {
+        Sentence selectedSentence = (Sentence)sentenceList.getSelectedValue();
+        skyggeFrame.loadSentence(selectedSentence);
+        this.setVisible(false);
+    }
     private void sentencePackSelected(int index) {
         SentencePack sentencePack = sentencePacks.get(index);
         
