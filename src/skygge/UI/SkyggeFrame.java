@@ -42,6 +42,11 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private boolean isRecording = false;
 
+    private String URL_SKYGGE_INFO = "https://skygge.s3.amazonaws.com/skyyge_info.json";
+
+    private String STATUS_BAR_MESSAGE_UPDATE = "<html><font color=red>Your version of Skygge is outdated. To update, please go to http://skygge.zaoyin.eu.</font></html>";
+    private String STATUS_BAR_MESSAGE_THANK_YOU = "Thanks for using Skygge.";
+
 
     public SkyggeFrame() {
         initComponents();
@@ -59,22 +64,22 @@ public class SkyggeFrame extends javax.swing.JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    String skyggeInfoString = Utils.loadUrlIntoString("https://skygge.s3.amazonaws.com/skyyge_info.json");
+                    String skyggeInfoString = Utils.loadUrlIntoString(URL_SKYGGE_INFO);
                     JSONObject skyggeInfoData = (JSONObject)JSONValue.parseStrict(skyggeInfoString);
 
                     String newestVersion = (String)skyggeInfoData.get("newest_version");
                     String messageOfTheDay = (String)skyggeInfoData.get("message_of_the_day");
 
                     if (!newestVersion.equals(Skygge.VERSION)) {
-                        statusBarLabel.setText("<html><font color=red>Your version of Skygge is outdated. To update, please go to http://skygge.zaoyin.eu.</red>");
+                        statusBarLabel.setText(STATUS_BAR_MESSAGE_UPDATE);
                     } else {
                         statusBarLabel.setText(messageOfTheDay);
                     }
                 } catch (IOException e) {
-                    statusBarLabel.setText("Thanks for using Skygge.");
+                    statusBarLabel.setText(STATUS_BAR_MESSAGE_THANK_YOU);
                     // Do nothing, check version the next time the user is online
                 } catch (ParseException e) {
-                    statusBarLabel.setText("Thanks for using Skygge.");
+                    statusBarLabel.setText(STATUS_BAR_MESSAGE_THANK_YOU);
                     // This shouldn't happen, but it can be ignored.
                 }
             }
@@ -99,18 +104,23 @@ public class SkyggeFrame extends javax.swing.JFrame {
         }
     }
 
+    private String HOTKEY_ACTION_PLAY_SENTENCE = "play sentence button clicked";
+    private String HOTKEY_ACTION_LOOP_SENTENCE = "loop sentence button clicked";
+    private String HOTKEY_ACTION_PLAY_RECORDING = "play recording button clicked";
+    private String HOTKEY_ACTION_RECORD_RECORDING = "record sentence button clicked";
+
     private void setUpHotkeys() {
         InputMap inputMap = rootPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        inputMap.put(KeyStroke.getKeyStroke('a'), "play sentence button clicked");
-        inputMap.put(KeyStroke.getKeyStroke('s'), "loop sentence button clicked");
-        inputMap.put(KeyStroke.getKeyStroke('d'), "play recording button clicked");
-        inputMap.put(KeyStroke.getKeyStroke('f'), "record recording button clicked");
+        inputMap.put(KeyStroke.getKeyStroke('a'), HOTKEY_ACTION_PLAY_SENTENCE);
+        inputMap.put(KeyStroke.getKeyStroke('s'), HOTKEY_ACTION_LOOP_SENTENCE);
+        inputMap.put(KeyStroke.getKeyStroke('d'), HOTKEY_ACTION_PLAY_RECORDING);
+        inputMap.put(KeyStroke.getKeyStroke('f'), HOTKEY_ACTION_RECORD_RECORDING);
 
         ActionMap actionMap = rootPanel.getActionMap();
-        actionMap.put("play sentence button clicked", new PressButtonAction(playSentenceButton));
-        actionMap.put("loop sentence button clicked", new PressButtonAction(loopSentenceButton));
-        actionMap.put("play recording button clicked", new PressButtonAction(playRecordingButton));
-        actionMap.put("record recording button clicked", new PressButtonAction(recordRecordingButton));  
+        actionMap.put(HOTKEY_ACTION_PLAY_SENTENCE, new PressButtonAction(playSentenceButton));
+        actionMap.put(HOTKEY_ACTION_LOOP_SENTENCE, new PressButtonAction(loopSentenceButton));
+        actionMap.put(HOTKEY_ACTION_PLAY_RECORDING, new PressButtonAction(playRecordingButton));
+        actionMap.put(HOTKEY_ACTION_RECORD_RECORDING, new PressButtonAction(recordRecordingButton));  
     }
 
     class PressButtonAction extends AbstractAction {
