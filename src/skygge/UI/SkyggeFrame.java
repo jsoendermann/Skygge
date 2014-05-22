@@ -70,6 +70,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
                     // TODO display some default message
                     // Do nothing, check version the next time the user is online
                 } catch (ParseException e) {
+                    System.out.println(e.getMessage());
                     System.out.println(-41);
                 }
             }

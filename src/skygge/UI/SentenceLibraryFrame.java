@@ -21,6 +21,7 @@ package skygge.UI;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Map;
+import javax.swing.DefaultListModel;
 import net.minidev.json.*;
 import net.minidev.json.parser.ParseException;
 import skygge.Utils;
@@ -48,11 +49,16 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
                     JSONObject languagesMap = (JSONObject)sentenceDataObject.get("languages");
                     JSONArray chineseSentencePacks = (JSONArray)languagesMap.get("Chinese");
                     
-                    //List chineseSentencePacks = (List)((JSONObject)sentenceData).getKey("languages")).getKey("Chinese");
-                
+                    DefaultListModel sentencePackListModel = new DefaultListModel();
+                    
                     for (int i = 0; i < chineseSentencePacks.size(); i++) {
-                        System.out.println(((Map)chineseSentencePacks.get(i)).get("name"));
+                        JSONObject sentencePack = (JSONObject)chineseSentencePacks.get(i);
+                        
+                        sentencePackListModel.addElement((String)sentencePack.get("name"));
                     }
+                    
+                    sentencePackList.setModel(sentencePackListModel);
+                    sentencePackList.setSelectedIndex(0);
                 } catch (IOException e) {
                     System.exit(-31);
                 } catch (ParseException e) {
