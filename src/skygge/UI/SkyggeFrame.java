@@ -18,7 +18,7 @@
 
 package skygge.UI;
 
-import com.json.parsers.*;
+
 import java.awt.Font;
 import java.awt.event.*;
 import java.io.*;
@@ -36,6 +36,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
     
     private SentenceLibraryFrame sentenceLibraryFrame;
 
+    private boolean isRecording = false;
+
     /**
      * Creates new form NewJFrame1
      */
@@ -47,33 +49,31 @@ public class SkyggeFrame extends javax.swing.JFrame {
         Thread checkVersionThread = new Thread() {
             public void run() {
                 try {
-                    
-                    byte[] skyggeInfoByteArray = Utils.loadUrlIntoByteArray("https://skygge.s3.amazonaws.com/skyyge_info.json");
-                    String skyggeInfoString = new String(skyggeInfoByteArray);
-                    
-                    JsonParserFactory factory=JsonParserFactory.getInstance();
-                    JSONParser parser=factory.newJsonParser();
-                    Map skyggeInfoData=parser.parseJson(skyggeInfoString);
+                    String skyggeInfoString = Utils.loadUrlIntoString("https://skygge.s3.amazonaws.com/skyyge_info.json");
+                    Map skyggeInfoData = Utils.parseJson(skyggeInfoString);
                     
                     String newestVersion = (String)skyggeInfoData.get("newest_version");
                     String messageOfTheDay = (String)skyggeInfoData.get("message_of_the_day");
                     
                     if (!newestVersion.equals(Skygge.VERSION)) {
                         statusBarLabel.setText("Your version of Skygge is outdated. To update, please go to http://skygge.zaoyin.eu.");
+                        // TODO change or remove this
                         Font font = statusBarLabel.getFont();
                         statusBarLabel.setFont(new Font(font.getFontName(), Font.PLAIN, font.getSize()));
                     } else {
                         statusBarLabel.setText(messageOfTheDay);
                     }
                 } catch (IOException e) {
+                    // TODO display some default message
                     // Do nothing, check version the next time the user is online
                 }
             }
         };
         checkVersionThread.start();
         
+        // TODO maybe do this asynchronously
         try {
-            
+            // TODO load sentence from file
             sentenceAudioData = Utils.loadUrlIntoByteArray("https://skygge.s3.amazonaws.com/sentence-packs/chinese/animals2/animals2_001.wav");
             for (int i = 0; i < sentenceAudioData.length; i++)
                 sentenceAudioData[i] += 128;
@@ -83,6 +83,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
             System.exit(-20);
         }
         
+        // TODO move this to separate function
         InputMap inputMap = rootPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(KeyStroke.getKeyStroke('a'), "play sentence button clicked");
         inputMap.put(KeyStroke.getKeyStroke('s'), "loop sentence button clicked");
@@ -96,6 +97,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         actionMap.put("record recording button clicked", new PressButtonAction(recordRecordingButton));  
     }
     
+    // TODO move this somewhere else
     class PressButtonAction extends AbstractAction {
         AbstractButton button;
         
@@ -106,13 +108,6 @@ public class SkyggeFrame extends javax.swing.JFrame {
             button.doClick();
         }
     }
-    
-    class RecordAction extends AbstractAction {
-        public void actionPerformed(ActionEvent e) {
-            SoundDeviceManager.getInstance().startPlaying(recordedAudioData);
-        }
-    }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -233,6 +228,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel11.add(filler9, new java.awt.GridBagConstraints());
 
         showLibraryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/music-library.png"))); // NOI18N
+        showLibraryButton.setToolTipText("Open sentence library.");
         showLibraryButton.setPreferredSize(new java.awt.Dimension(50, 50));
         showLibraryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -245,6 +241,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         jPanel11.add(showLibraryButton, gridBagConstraints);
 
         showSentenceInfoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/help-about.png"))); // NOI18N
+        showSentenceInfoButton.setToolTipText("Show sentence information.");
         showSentenceInfoButton.setActionCommand("I");
         showSentenceInfoButton.setPreferredSize(new java.awt.Dimension(50, 50));
         showSentenceInfoButton.addActionListener(new java.awt.event.ActionListener() {
@@ -356,30 +353,62 @@ public class SkyggeFrame extends javax.swing.JFrame {
         recordRecordingButton.setSelected(false);
     }
 
+    private void stopEverythingAndUpdateRecordedAudioData() {
+        SoundDeviceManager.getInstance().stopEverything();
+
+        if (isRecording) {
+            recordedAudioData = SoundDeviceManager.getInstance().getRecordedAudioData();
+            recordingWaveFormPanel.setAudioData(recordedAudioData);
+            isRecording = false;
+        }
+    }
+
 
     private void playSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playSentenceButtonActionPerformed
         deselectToggleButtons();
-        SoundDeviceManager.getInstance().startPlaying(sentenceAudioData);
+        stopEverythingAndUpdateRecordedAudioData();
         
+        SoundDeviceManager.getInstance().startPlaying(sentenceAudioData);
     }//GEN-LAST:event_playSentenceButtonActionPerformed
+
+    private void loopSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loopSentenceButtonActionPerformed
+        deselectRecordRecordingButton();
+        stopEverythingAndUpdateRecordedAudioData();
+
+        if (loopSentenceButton.isSelected())
+            SoundDeviceManager.getInstance().startLooping(sentenceAudioData);
+        else
+            SoundDeviceManager.getInstance().stopEverything();
+    }//GEN-LAST:event_loopSentenceButtonActionPerformed
 
 
     private void playRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playRecordingButtonActionPerformed
         deselectToggleButtons();
-        SoundDeviceManager.getInstance().stopEverything();
-        
-        recordedAudioData = SoundDeviceManager.getInstance().getRecordedAudioData();
-        recordingWaveFormPanel.setAudioData(recordedAudioData);
+        stopEverythingAndUpdateRecordedAudioData();
         
         if (recordedAudioData != null) {
             SoundDeviceManager.getInstance().startPlaying(recordedAudioData);
-            
         }
     }//GEN-LAST:event_playRecordingButtonActionPerformed
 
+    private void recordRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordRecordingButtonActionPerformed
+        deselectLoopSentenceButton();
+
+        if (!playRecordingButton.isEnabled()) {
+            playRecordingButton.setEnabled(true);
+        }
+
+        if(recordRecordingButton.isSelected()){
+            SoundDeviceManager.getInstance().startRecording();
+            isRecording = true;
+        } else {
+            stopEverythingAndUpdateRecordedAudioData();
+        }
+    }//GEN-LAST:event_recordRecordingButtonActionPerformed
+
+
 
     private void showLibraryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showLibraryButtonActionPerformed
-        SentenceLibraryFrame sentenceLibraryFrame = new SentenceLibraryFrame();
         sentenceLibraryFrame.setVisible(true);
     }//GEN-LAST:event_showLibraryButtonActionPerformed
 
@@ -387,30 +416,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_showSentenceInfoButtonActionPerformed
 
-    private void loopSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loopSentenceButtonActionPerformed
-        deselectRecordRecordingButton();
-        if (loopSentenceButton.isSelected())
-            SoundDeviceManager.getInstance().startLooping(sentenceAudioData);
-        else
-            SoundDeviceManager.getInstance().stopEverything();
-    }//GEN-LAST:event_loopSentenceButtonActionPerformed
 
-    private void recordRecordingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recordRecordingButtonActionPerformed
-        deselectLoopSentenceButton();
-        if(recordRecordingButton.isSelected()){
-            SoundDeviceManager.getInstance().startRecording();
-        } else {
-            SoundDeviceManager.getInstance().stopEverything();
-            recordedAudioData = SoundDeviceManager.getInstance().getRecordedAudioData();
-            /*AudioNormaliser am = new AudioNormaliser(recordedAudioData);
-            System.out.println(am.getAverageLevel());
-            recordedAudioData = am.getNormalisedAudioData((byte)150);*/
-            recordingWaveFormPanel.setAudioData(recordedAudioData);
-        }
-        if (!playRecordingButton.isEnabled()) {
-            playRecordingButton.setEnabled(true);
-        }
-    }//GEN-LAST:event_recordRecordingButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

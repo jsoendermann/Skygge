@@ -306,6 +306,7 @@
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                               <Image iconType="3" name="/music-library.png"/>
                             </Property>
+                            <Property name="toolTipText" type="java.lang.String" value="Open sentence library."/>
                             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[50, 50]"/>
                             </Property>
@@ -324,6 +325,7 @@
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                               <Image iconType="3" name="/help-about.png"/>
                             </Property>
+                            <Property name="toolTipText" type="java.lang.String" value="Show sentence information."/>
                             <Property name="actionCommand" type="java.lang.String" value="I"/>
                             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                               <Dimension value="[50, 50]"/>

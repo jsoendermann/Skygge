@@ -21,6 +21,8 @@ package skygge;
 import java.io.*;
 import java.net.*;
 import javax.sound.sampled.*;
+import com.json.parsers.*;
+import java.util.*;
 
 public class Utils {
     // TODO put this somewhere else or get rid of it
@@ -36,7 +38,7 @@ public class Utils {
                 channels, (sampleSize / 8) * channels, rate, bigEndian);
     }
 
-    public static byte[] loadFile(String path) throws IOException {
+    public static byte[] loadFileIntoByteArray(String path) throws IOException {
         RandomAccessFile f = new RandomAccessFile(path, "r");
         try {
             byte[] data = new byte[(int)f.length()];
@@ -68,6 +70,13 @@ public class Utils {
     
     public static String loadUrlIntoString(String urlString) throws IOException {
         return new String(loadUrlIntoByteArray(urlString));
+    }
+    
+    public static Map parseJson(String jsonString) {
+        // TODO maybe the parser only needs to get created once
+        JsonParserFactory factory = JsonParserFactory.getInstance();
+        JSONParser parser = factory.newJsonParser();
+        return parser.parseJson(jsonString);
     }
 }
 
