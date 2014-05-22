@@ -20,10 +20,14 @@ package skygge.UI;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultListModel;
 import net.minidev.json.*;
 import net.minidev.json.parser.ParseException;
+import skygge.Sentence;
+import skygge.SentencePack;
 import skygge.Utils;
 
 /**
@@ -31,12 +35,19 @@ import skygge.Utils;
  * @author json
  */
 public class SentenceLibraryFrame extends javax.swing.JFrame {
- 
+    private SkyggeFrame skyggeFrame;
+    
+    private List<SentencePack> sentencePacks;
+    
     /**
      * Creates new form SentenceLibraryFrame
      */
-    public SentenceLibraryFrame() {
+    public SentenceLibraryFrame(SkyggeFrame skyggeFrame) {
         initComponents();
+        
+        this.skyggeFrame = skyggeFrame;
+        
+        sentencePacks = new ArrayList<SentencePack>();
         
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -47,18 +58,24 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
                     JSONObject sentenceDataObject = (JSONObject)sentenceData;
                     
                     JSONObject languagesMap = (JSONObject)sentenceDataObject.get("languages");
-                    JSONArray chineseSentencePacks = (JSONArray)languagesMap.get("Chinese");
+                    JSONArray chineseSentencePacksData = (JSONArray)languagesMap.get("Chinese");
+                    
+                    for (int i = 0; i < chineseSentencePacksData.size(); i++) {
+                        sentencePacks.add(new SentencePack((JSONObject)chineseSentencePacksData.get(i)));
+                    }
+                    
                     
                     DefaultListModel sentencePackListModel = new DefaultListModel();
                     
-                    for (int i = 0; i < chineseSentencePacks.size(); i++) {
-                        JSONObject sentencePack = (JSONObject)chineseSentencePacks.get(i);
-                        
-                        sentencePackListModel.addElement((String)sentencePack.get("name"));
+                    for (int i = 0; i < sentencePacks.size(); i++) {
+                        sentencePackListModel.addElement(sentencePacks.get(i));
                     }
+                    
                     
                     sentencePackList.setModel(sentencePackListModel);
                     sentencePackList.setSelectedIndex(0);
+                    
+                    sentencePackSelected(0);
                 } catch (IOException e) {
                     System.exit(-31);
                 } catch (ParseException e) {
@@ -94,9 +111,19 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
         jPanel1.add(cancelButton);
 
         openButton.setText("Open");
+        openButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openButtonActionPerformed(evt);
+            }
+        });
         jPanel1.add(openButton);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
@@ -110,6 +137,11 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
             String[] strings = { "Loading..." };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
+        });
+        sentencePackList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                sentencePackListValueChanged(evt);
+            }
         });
         jScrollPane1.setViewportView(sentencePackList);
 
@@ -129,6 +161,33 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
+        Sentence selectedSentence = (Sentence)sentenceList.getSelectedValue();
+        skyggeFrame.loadSentence(selectedSentence);
+        this.setVisible(false);
+    }//GEN-LAST:event_openButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void sentencePackListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_sentencePackListValueChanged
+        int index = sentencePackList.getSelectedIndex();
+        sentencePackSelected(index);
+        
+    }//GEN-LAST:event_sentencePackListValueChanged
+
+    private void sentencePackSelected(int index) {
+        SentencePack sentencePack = sentencePacks.get(index);
+        
+        DefaultListModel sentenceListModel = new DefaultListModel();
+        
+        for (Sentence sentence : sentencePack.getSentences()) {
+            sentenceListModel.addElement(sentence);
+        }
+        
+        sentenceList.setModel(sentenceListModel);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

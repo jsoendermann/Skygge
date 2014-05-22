@@ -27,6 +27,7 @@ import javax.swing.*;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 import net.minidev.json.parser.ParseException;
+import skygge.Sentence;
 import skygge.Skygge;
 import skygge.SoundDeviceManager;
 import skygge.Utils;
@@ -48,7 +49,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
     public SkyggeFrame() {
         initComponents();
         
-        sentenceLibraryFrame = new SentenceLibraryFrame();
+        sentenceLibraryFrame = new SentenceLibraryFrame(this);
         sentenceInfoFrame = new SentenceInfoFrame();
         
         Thread checkVersionThread = new Thread() {
@@ -424,7 +425,22 @@ public class SkyggeFrame extends javax.swing.JFrame {
         sentenceInfoFrame.setVisible(true);
     }//GEN-LAST:event_showSentenceInfoButtonActionPerformed
 
-
+    
+    public void loadSentence(Sentence sentence) {
+        try {
+            sentenceAudioData = Utils.loadUrlIntoByteArray(sentence.getUrl());
+            for (int i = 0; i < sentenceAudioData.length; i++)
+                sentenceAudioData[i] += 128;
+            sentenceWaveFormPanel.setAudioData(sentenceAudioData);
+            
+            sentenceInfoFrame.setInformation(sentence.getInformation());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.exit(-20);
+        }
+        
+        
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

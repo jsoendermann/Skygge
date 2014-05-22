@@ -56,6 +56,9 @@ public class Skygge {
         
         SkyggeFrame frame = new SkyggeFrame();
         frame.setVisible(true);
+        
+        // This starts the SoundDeviceManager thread.
+        SoundDeviceManager.getInstance();
     }
     
 }
