@@ -96,7 +96,6 @@ public class Sentence {
     
     @Override public String toString()
     {
-        // TODO make sentence ids start from 1
-        return (getId() + 1) + ": " + getInformationEntry("Chinese (simp)");
+        return getId() + ": " + getInformationEntry("Chinese (simp)");
     }
 }

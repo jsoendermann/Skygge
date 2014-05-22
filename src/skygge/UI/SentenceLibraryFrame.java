@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import net.minidev.json.*;
 import net.minidev.json.parser.ParseException;
 import skygge.Sentence;
@@ -39,6 +40,8 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
     
     private List<SentencePack> sentencePacks;
     
+    private final String URL_SENTENCE_DATA = "https://skygge.s3.amazonaws.com/sentence_data.json";
+    
     /**
      * Creates new form SentenceLibraryFrame
      */
@@ -52,7 +55,7 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    String sentenceDataString = Utils.loadUrlIntoString("https://skygge.s3.amazonaws.com/sentence_data.json");
+                    String sentenceDataString = Utils.loadUrlIntoString(URL_SENTENCE_DATA);
                     
                     Object sentenceData = JSONValue.parseStrict(sentenceDataString);
                     JSONObject sentenceDataObject = (JSONObject)sentenceData;
@@ -64,22 +67,22 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
                         sentencePacks.add(new SentencePack((JSONObject)chineseSentencePacksData.get(i)));
                     }
                     
-                    
                     DefaultListModel sentencePackListModel = new DefaultListModel();
-                    
                     for (int i = 0; i < sentencePacks.size(); i++) {
                         sentencePackListModel.addElement(sentencePacks.get(i));
                     }
-                    
-                    
                     sentencePackList.setModel(sentencePackListModel);
-                    sentencePackList.setSelectedIndex(0);
                     
+                    sentencePackList.setSelectedIndex(0);
                     sentencePackSelected(0);
                 } catch (IOException e) {
-                    System.exit(-31);
+                    JOptionPane.showMessageDialog(null, "Unable to load sentence library.", 
+                        "IO Error", JOptionPane.ERROR_MESSAGE);
+                    // Change "Loading..." string in both lists to something else
                 } catch (ParseException e) {
-                    System.exit(-32);
+                    JOptionPane.showMessageDialog(null, "Unable to parse sentence library.", 
+                        "IO Error", JOptionPane.ERROR_MESSAGE);
+                    // Change "Loading..." string in both lists to something else
                 }
             }
         });

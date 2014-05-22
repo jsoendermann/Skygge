@@ -20,6 +20,7 @@ package skygge;
 
 import java.io.*;
 import javax.sound.sampled.*;
+import javax.swing.JOptionPane;
 
 
 public class SoundDeviceManager extends Thread {
@@ -164,8 +165,6 @@ public class SoundDeviceManager extends Thread {
                                 // the class should always go 
                                 // back to the IDLE state before  
                                 // changing to a new state
-                                // TODO handle this
-                                System.exit(-14);
                                 break;
                         }
                         break;
@@ -185,8 +184,6 @@ public class SoundDeviceManager extends Thread {
                                 // the class should always go 
                                 // back to the IDLE state before  
                                 // changing to a new state
-                                // TODO handle this
-                                System.exit(-15);
                                 break;
                         }
                         break;
@@ -206,8 +203,6 @@ public class SoundDeviceManager extends Thread {
                                 // the class should always go 
                                 // back to the IDLE state before  
                                 // changing to a new state
-                                // TODO handle this
-                                System.exit(-16);
                                 break;
                         }
                         break;
@@ -231,8 +226,9 @@ public class SoundDeviceManager extends Thread {
             sourceDataLine.open(format);
             sourceDataLine.start();
         } catch (Exception e) {
-            // TODO
-            System.exit(-10);
+            JOptionPane.showMessageDialog(null, "Unable to set up speakers for playback.", 
+                    "Audio Error", JOptionPane.ERROR_MESSAGE);
+            currentState = nextState = State.IDLE;
         }
 
         buffer = new byte[BUFFER_SIZE];
@@ -245,13 +241,12 @@ public class SoundDeviceManager extends Thread {
                 sourceDataLine.write(buffer, 0, count);
             } else {
                 shutDownPlayingObjects();
-                // TODO synchronize this w/ public functions
                 nextState = currentState = State.IDLE;
             }
-
         } catch (Exception e) {
-            // TODO
-            System.exit(-11);
+            JOptionPane.showMessageDialog(null, "Unable to play audio data.", 
+                    "Audio Error", JOptionPane.ERROR_MESSAGE);
+            currentState = nextState = State.IDLE;
         }
     }
 
@@ -265,8 +260,9 @@ public class SoundDeviceManager extends Thread {
             }
 
         } catch (Exception e) {
-            // TODO
-            System.exit(-11);
+            JOptionPane.showMessageDialog(null, "Unable to loop audio data.", 
+                    "Audio Error", JOptionPane.ERROR_MESSAGE);
+            currentState = nextState = State.IDLE;
         }
     }
 
@@ -289,7 +285,9 @@ public class SoundDeviceManager extends Thread {
 
             buffer = new byte[BUFFER_SIZE];
         } catch (Exception e) {
-            System.exit(-12);
+            JOptionPane.showMessageDialog(null, "Unable to set up microphone for recording. Do you have a working microphone?", 
+                    "Audio Error", JOptionPane.ERROR_MESSAGE);
+            currentState = nextState = State.IDLE;
         }
     }
 
@@ -307,7 +305,7 @@ public class SoundDeviceManager extends Thread {
         try {
             recordStream.close();
         } catch (Exception e) {
-            System.exit(-13);
+            // It's probably safe to ignore this
         }
         
         targetDataLine.close();

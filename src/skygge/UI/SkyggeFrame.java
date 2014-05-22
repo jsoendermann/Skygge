@@ -42,10 +42,10 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
     private boolean isRecording = false;
 
-    private String URL_SKYGGE_INFO = "https://skygge.s3.amazonaws.com/skyyge_info.json";
+    private final String URL_SKYGGE_INFO = "https://skygge.s3.amazonaws.com/skyyge_info.json";
 
-    private String STATUS_BAR_MESSAGE_UPDATE = "<html><font color=red>Your version of Skygge is outdated. To update, please go to http://skygge.zaoyin.eu.</font></html>";
-    private String STATUS_BAR_MESSAGE_THANK_YOU = "Thanks for using Skygge.";
+    private final String STATUS_BAR_MESSAGE_UPDATE = "<html><font color=red>Your version of Skygge is outdated. To update, please go to http://skygge.zaoyin.eu.</font></html>";
+    private final String STATUS_BAR_MESSAGE_THANK_YOU = "Thanks for using Skygge.";
 
 
     public SkyggeFrame() {
@@ -104,10 +104,10 @@ public class SkyggeFrame extends javax.swing.JFrame {
         }
     }
 
-    private String HOTKEY_ACTION_PLAY_SENTENCE = "play sentence button clicked";
-    private String HOTKEY_ACTION_LOOP_SENTENCE = "loop sentence button clicked";
-    private String HOTKEY_ACTION_PLAY_RECORDING = "play recording button clicked";
-    private String HOTKEY_ACTION_RECORD_RECORDING = "record sentence button clicked";
+    private final String HOTKEY_ACTION_PLAY_SENTENCE = "play sentence button clicked";
+    private final String HOTKEY_ACTION_LOOP_SENTENCE = "loop sentence button clicked";
+    private final String HOTKEY_ACTION_PLAY_RECORDING = "play recording button clicked";
+    private final String HOTKEY_ACTION_RECORD_RECORDING = "record sentence button clicked";
 
     private void setUpHotkeys() {
         InputMap inputMap = rootPanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -452,8 +452,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
             sentenceInfoFrame.setInformation(sentence.getInformation());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.exit(-20);
+            JOptionPane.showMessageDialog(null, "Unable to load sentence.", 
+                "IO Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
