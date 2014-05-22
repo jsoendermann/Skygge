@@ -323,7 +323,7 @@
                         <Component class="javax.swing.JButton" name="showSentenceInfoButton">
                           <Properties>
                             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                              <Image iconType="3" name="/help-about.png"/>
+                              <Image iconType="3" name="/ibus-panel.png"/>
                             </Property>
                             <Property name="toolTipText" type="java.lang.String" value="Show sentence information."/>
                             <Property name="actionCommand" type="java.lang.String" value="I"/>

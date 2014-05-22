@@ -246,7 +246,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         gridBagConstraints.gridy = 0;
         jPanel11.add(showLibraryButton, gridBagConstraints);
 
-        showSentenceInfoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/help-about.png"))); // NOI18N
+        showSentenceInfoButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ibus-panel.png"))); // NOI18N
         showSentenceInfoButton.setToolTipText("Show sentence information.");
         showSentenceInfoButton.setActionCommand("I");
         showSentenceInfoButton.setPreferredSize(new java.awt.Dimension(50, 50));
