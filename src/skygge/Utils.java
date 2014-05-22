@@ -28,6 +28,8 @@ import net.minidev.json.JSONValue;
 public class Utils {
     // TODO put this somewhere else or get rid of it
     // altogether
+    // TODO get this from available formats for recording
+    // 
     public static AudioFormat getFormat() {
         AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED;
         float rate = 44100.0F;
@@ -52,27 +54,26 @@ public class Utils {
     
     public static byte[] loadUrlIntoByteArray(String urlString) throws IOException {
         URL url = new URL(urlString);
-        ByteArrayOutputStream bais = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        InputStream inputStream = null;
         
-        InputStream is = null;
         try {
-            is = url.openStream();
-            byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+            inputStream = url.openStream();
+            byte[] byteChunk = new byte[8192];
             int n;
 
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                bais.write(byteChunk, 0, n);
+            while ((n = inputStream.read(byteChunk)) > 0 ) {
+                outputStream.write(byteChunk, 0, n);
             }
         } finally {
-            if (is != null) { is.close(); }
+            if (inputStream != null) { 
+                inputStream.close(); 
+            }
         }
-        return bais.toByteArray();
+        return outputStream.toByteArray();
     }
     
     public static String loadUrlIntoString(String urlString) throws IOException {
         return new String(loadUrlIntoByteArray(urlString));
     }
-    
-
 }
-

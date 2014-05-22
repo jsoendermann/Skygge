@@ -18,10 +18,8 @@
 
 package skygge;
 
-import java.util.ArrayList;
-import java.util.List;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
+import java.util.*;
+import net.minidev.json.*;
 
 /**
  *
@@ -40,8 +38,8 @@ public class SentencePack {
         
         JSONArray sentenceArray = (JSONArray)sentencePackData.get("sentences");
         
-        for (int i = 0; i < sentenceArray.size(); i++) {
-            this.sentences.add(new Sentence((JSONObject)sentenceArray.get(i)));
+        for (Object sentenceInfo : sentenceArray) {
+            this.sentences.add(new Sentence((JSONObject)sentenceInfo));
         }
     }
 

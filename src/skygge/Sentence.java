@@ -18,10 +18,9 @@
 
 package skygge;
 
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.AbstractMap.SimpleEntry;
 import net.minidev.json.*;
 
 /**
@@ -43,8 +42,7 @@ public class Sentence {
         
         JSONArray sentenceInformation = (JSONArray)sentenceData.get("information");
         
-        // TODO don't assume ids are continuous
-        for (int i = 0; i < sentenceInformation.size(); i++) {
+        for (int i = 0; information.size() < sentenceInformation.size(); i++) {
             JSONObject infoEntry = getInfoEntryById(sentenceInformation, i);
             
             if (infoEntry != null) {
@@ -65,7 +63,7 @@ public class Sentence {
                 return infoEntry;
             }
         }
-        // TODO handle this case
+        
         return null;
     }
 
@@ -92,7 +90,7 @@ public class Sentence {
                 return e.getValue();
             }
         }
-        // TODO handle this
+        
         return null;
     }
     

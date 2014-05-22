@@ -25,13 +25,19 @@ import javax.sound.sampled.*;
 public class SoundDeviceManager extends Thread {
     private static SoundDeviceManager instance = null;
     
+    // This lock protects access to the currentState
+    // and nextState variables. It is used to synchronise
+    // between the SoundDeviceManager thread and calling threads.
     private Object stateLock;
 
     private State currentState;
     private State nextState;
 
-    // Used for both playing and recording
+    // Temp buffer used for both playing and recording
     private byte[] buffer;
+    // This should be sufficiently small, so that the SoundDeviceManager
+    // can react quickly to user input.
+    private int BUFFER_SIZE = 100;
 
     // Used for playing
     private byte[] audioDataToBePlayed;
@@ -48,9 +54,8 @@ public class SoundDeviceManager extends Thread {
         IDLE, PLAYING, LOOPING, RECORDING
     }
 
-
     // This class is a singleton, getInstance() is used
-    // to the the instance
+    // to obtain its instance.
     protected SoundDeviceManager() {
         this.nextState = State.IDLE;
         this.currentState = State.IDLE;
@@ -66,9 +71,8 @@ public class SoundDeviceManager extends Thread {
         return instance;
     }
 
-
+    
     public synchronized void startPlaying(byte[] audioDataToBePlayed) {
-        //System.out.println("startPlaying");
         stopEverything();
         synchronized (stateLock) {
             this.audioDataToBePlayed = audioDataToBePlayed;
@@ -77,7 +81,6 @@ public class SoundDeviceManager extends Thread {
     }
 
     public synchronized void startLooping(byte[] audioDataToBePlayed) {
-        //System.out.println("startLooping");
         stopEverything();
         synchronized (stateLock) {
             this.audioDataToBePlayed = audioDataToBePlayed;
@@ -87,7 +90,6 @@ public class SoundDeviceManager extends Thread {
 
 
     public synchronized void startRecording() {
-        //System.out.println("startRecording");
         stopEverything();
         synchronized (stateLock) {
             nextState = State.RECORDING;
@@ -97,29 +99,21 @@ public class SoundDeviceManager extends Thread {
     // This method blocks until the SoundDeviceManager has stopped what it 
     // was doing before and returns to the IDLE state
     public synchronized void stopEverything() {
-        //System.out.println("stopEverything");
         synchronized (stateLock) {
             nextState = State.IDLE;
         }
-        
-        //System.out.println("set next state to idle");
 
         State currentStateCopy;
-        
         do {
-        //    System.out.println("entered loop");
-            
             synchronized (stateLock) {
                 currentStateCopy = currentState;
                 
-                // This should not happen
+                // TODO handle this
                 if (nextState != State.IDLE) {
                     System.exit(-20);
                 }
             }
-            
-         //   System.out.println("left synchronized block in loop");
-         //   System.out.println("currentStateCopy is " + currentStateCopy);
+
             Thread.yield();
         } while (currentStateCopy != State.IDLE);
     }
@@ -128,32 +122,13 @@ public class SoundDeviceManager extends Thread {
         return recordedAudioData;
     }
 
-
-    private String stateToString(State s) {
-        switch (s) {
-            case IDLE: return "IDLE";
-            case PLAYING: return "PLAYING";
-            case LOOPING: return "LOOPING";
-            case RECORDING: return "RECORDING";
-            default: return "";
-        }
-    }
-
-    private State lastCurrentState = State.IDLE, lastNextState = State.IDLE;
-    private void printIfChanged() {
-        if (lastCurrentState != currentState || lastNextState != nextState) {
-            System.out.println("currentState: " + stateToString(currentState) +
-                    " nextState: " + stateToString(nextState));
-            lastCurrentState = currentState;
-            lastNextState = nextState;
-        }
-    }
     
-    // run is a public method but it is called by the getInstance
+    // run is a public method but it is called by getInstance
+    // and should not be called by threads that use the SoundDeviceManager
     public void run() {
         while (true) {
             synchronized (stateLock) {
-                printIfChanged();
+                // TODO break this up into several functions
                 switch (currentState) {
                     case IDLE: 
                         switch (nextState) {
@@ -237,11 +212,6 @@ public class SoundDeviceManager extends Thread {
                         }
                         break;
                 }
-                /*System.out.println("finished state loop");
-                try {
-                Thread.sleep(333);
-                } catch (Exception e) {}
-                */
             }
             Thread.yield();
         }
@@ -250,7 +220,7 @@ public class SoundDeviceManager extends Thread {
     private void setUpPlayingObjects() {
         AudioFormat format = Utils.getFormat();
 
-        // Set up input stream from audioDataToBePlayed
+        // Set up input stream from audioDataToBePlayed array
         InputStream input = new ByteArrayInputStream(audioDataToBePlayed);
         audioInputStream = new AudioInputStream(input, format, audioDataToBePlayed.length / format.getFrameSize());
 
@@ -265,8 +235,7 @@ public class SoundDeviceManager extends Thread {
             System.exit(-10);
         }
 
-        // TODO put magic number somewhere else. make it small so that audio can be cut off quickly
-        buffer = new byte[100];
+        buffer = new byte[BUFFER_SIZE];
     }
 
     private void play() {
@@ -318,8 +287,7 @@ public class SoundDeviceManager extends Thread {
 
             recordStream = new ByteArrayOutputStream();
 
-            // TODO put magic number somewhere else. make it small so that audio can be cut off quickly
-            buffer = new byte[100];
+            buffer = new byte[BUFFER_SIZE];
         } catch (Exception e) {
             System.exit(-12);
         }
@@ -346,7 +314,4 @@ public class SoundDeviceManager extends Thread {
         
         recordedAudioData = recordStream.toByteArray();
     }
-
-
-
 }
