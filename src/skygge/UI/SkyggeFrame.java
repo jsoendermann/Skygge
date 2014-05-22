@@ -392,14 +392,16 @@ public class SkyggeFrame extends javax.swing.JFrame {
         deselectToggleButtons();
         stopEverythingAndUpdateRecordedAudioData();
 
-        SoundDeviceManager.getInstance().startPlaying(sentenceAudioData);
+        if (sentenceAudioData != null) {
+            SoundDeviceManager.getInstance().startPlaying(sentenceAudioData);
+        }
     }//GEN-LAST:event_playSentenceButtonActionPerformed
 
     private void loopSentenceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loopSentenceButtonActionPerformed
         deselectRecordRecordingButton();
         stopEverythingAndUpdateRecordedAudioData();
 
-        if (loopSentenceButton.isSelected())
+        if (loopSentenceButton.isSelected() && sentenceAudioData != null)
             SoundDeviceManager.getInstance().startLooping(sentenceAudioData);
         else
             SoundDeviceManager.getInstance().stopEverything();
