@@ -24,6 +24,9 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+import net.minidev.json.JSONObject;
+import net.minidev.json.JSONValue;
+import net.minidev.json.parser.ParseException;
 import skygge.Skygge;
 import skygge.SoundDeviceManager;
 import skygge.Utils;
@@ -50,7 +53,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
             public void run() {
                 try {
                     String skyggeInfoString = Utils.loadUrlIntoString("https://skygge.s3.amazonaws.com/skyyge_info.json");
-                    Map skyggeInfoData = Utils.parseJson(skyggeInfoString);
+                    JSONObject skyggeInfoData = (JSONObject)JSONValue.parseStrict(skyggeInfoString);
                     
                     String newestVersion = (String)skyggeInfoData.get("newest_version");
                     String messageOfTheDay = (String)skyggeInfoData.get("message_of_the_day");
@@ -66,6 +69,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
                 } catch (IOException e) {
                     // TODO display some default message
                     // Do nothing, check version the next time the user is online
+                } catch (ParseException e) {
+                    System.out.println(-41);
                 }
             }
         };

@@ -20,13 +20,17 @@ package skygge.UI;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Map;
+import net.minidev.json.*;
+import net.minidev.json.parser.ParseException;
+import skygge.Utils;
 
 /**
  *
  * @author json
  */
 public class SentenceLibraryFrame extends javax.swing.JFrame {
-
+ 
     /**
      * Creates new form SentenceLibraryFrame
      */
@@ -35,11 +39,25 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         
         EventQueue.invokeLater(new Runnable() {
             public void run() {
-                /*try {
-                    loadUrlIntoString("https://skygge.s3.amazonaws.com/sentence_data.json");
+                try {
+                    String sentenceDataString = Utils.loadUrlIntoString("https://skygge.s3.amazonaws.com/sentence_data.json");
+                    
+                    Object sentenceData = JSONValue.parseStrict(sentenceDataString);
+                    JSONObject sentenceDataObject = (JSONObject)sentenceData;
+                    
+                    JSONObject languagesMap = (JSONObject)sentenceDataObject.get("languages");
+                    JSONArray chineseSentencePacks = (JSONArray)languagesMap.get("Chinese");
+                    
+                    //List chineseSentencePacks = (List)((JSONObject)sentenceData).getKey("languages")).getKey("Chinese");
+                
+                    for (int i = 0; i < chineseSentencePacks.size(); i++) {
+                        System.out.println(((Map)chineseSentencePacks.get(i)).get("name"));
+                    }
                 } catch (IOException e) {
                     System.exit(-31);
-                }*/
+                } catch (ParseException e) {
+                    System.exit(-32);
+                }
             }
         });
         
