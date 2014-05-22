@@ -38,6 +38,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
     private byte[] recordedAudioData;
     
     private SentenceLibraryFrame sentenceLibraryFrame;
+    private SentenceInfoFrame sentenceInfoFrame;
 
     private boolean isRecording = false;
 
@@ -48,6 +49,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
         initComponents();
         
         sentenceLibraryFrame = new SentenceLibraryFrame();
+        sentenceInfoFrame = new SentenceInfoFrame();
         
         Thread checkVersionThread = new Thread() {
             public void run() {
@@ -419,7 +421,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_showLibraryButtonActionPerformed
 
     private void showSentenceInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showSentenceInfoButtonActionPerformed
-        // TODO add your handling code here:
+        sentenceInfoFrame.setVisible(true);
     }//GEN-LAST:event_showSentenceInfoButtonActionPerformed
 
 

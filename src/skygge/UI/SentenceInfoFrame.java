@@ -40,35 +40,32 @@ public class SentenceInfoFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        infoTextArea = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
-        labelChinese = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        labelPinyin = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        labelEnglish = new javax.swing.JLabel();
 
         setTitle("Sentence Info");
-        getContentPane().setLayout(new java.awt.GridLayout(3, 2));
+        setMinimumSize(null);
+        setPreferredSize(new java.awt.Dimension(320, 145));
+        setSize(new java.awt.Dimension(320, 140));
 
-        jLabel1.setText("Chinese:");
-        getContentPane().add(jLabel1);
+        jScrollPane1.setMinimumSize(null);
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(310, 135));
+        jScrollPane1.setSize(new java.awt.Dimension(310, 135));
 
-        labelChinese.setText("燕子的尾巴像剪刀。");
-        getContentPane().add(labelChinese);
+        infoTextArea.setEditable(false);
+        infoTextArea.setColumns(20);
+        infoTextArea.setRows(5);
+        infoTextArea.setText("Chinese (simp): 燕子的尾巴像剪刀。\nPinyin: Yan4zi de wei3ba xiang4 jian3dao1.\nEnglish: The swallow has a forked tail.");
+        infoTextArea.setMinimumSize(null);
+        infoTextArea.setPreferredSize(null);
+        infoTextArea.setSize(new java.awt.Dimension(300, 125));
+        jScrollPane1.setViewportView(infoTextArea);
 
-        jLabel3.setText("Pinyin:");
-        jLabel3.setAlignmentY(0.2F);
-        getContentPane().add(jLabel3);
+        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        labelPinyin.setText("Yan4zi de wei3ba xiang4 jian3dao1.");
-        getContentPane().add(labelPinyin);
-
-        jLabel5.setText("English:");
-        jLabel5.setAlignmentY(0.2F);
-        getContentPane().add(jLabel5);
-
-        labelEnglish.setText("The tail of the sparrow looks like a pair of scissors.");
-        getContentPane().add(labelEnglish);
+        jLabel1.setText("Ctrl-c to copy.");
+        getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -109,11 +106,8 @@ public class SentenceInfoFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea infoTextArea;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel labelChinese;
-    private javax.swing.JLabel labelEnglish;
-    private javax.swing.JLabel labelPinyin;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
