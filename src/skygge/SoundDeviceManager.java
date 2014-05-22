@@ -109,9 +109,10 @@ public class SoundDeviceManager extends Thread {
             synchronized (stateLock) {
                 currentStateCopy = currentState;
                 
-                // TODO handle this
                 if (nextState != State.IDLE) {
-                    System.exit(-20);
+                    JOptionPane.showMessageDialog(null, "Synchronization error.", 
+                        "Sync Error", JOptionPane.ERROR_MESSAGE);
+                    currentState = nextState = State.IDLE;
                 }
             }
 
