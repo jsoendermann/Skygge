@@ -33,11 +33,9 @@ import skygge.SoundDeviceManager;
 import skygge.Utils;
 
 
-
 public class SkyggeFrame extends javax.swing.JFrame {
     private byte[] sentenceAudioData;
-    // TODO rename
-    private byte[] recordedAudioData;
+    private byte[] recordingAudioData;
 
     private SentenceLibraryFrame sentenceLibraryFrame;
     private SentenceInfoFrame sentenceInfoFrame;
@@ -373,8 +371,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
         SoundDeviceManager.getInstance().stopEverything();
 
         if (isRecording) {
-            recordedAudioData = SoundDeviceManager.getInstance().getRecordedAudioData();
-            recordingWaveFormPanel.setAudioData(recordedAudioData);
+            recordingAudioData = SoundDeviceManager.getInstance().getRecordedAudioData();
+            recordingWaveFormPanel.setAudioData(recordingAudioData);
             isRecording = false;
         }
     }
@@ -402,8 +400,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
         deselectToggleButtons();
         stopEverythingAndUpdateRecordedAudioData();
 
-        if (recordedAudioData != null) {
-            SoundDeviceManager.getInstance().startPlaying(recordedAudioData);
+        if (recordingAudioData != null) {
+            SoundDeviceManager.getInstance().startPlaying(recordingAudioData);
         }
     }//GEN-LAST:event_playRecordingButtonActionPerformed
 
