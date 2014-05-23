@@ -54,6 +54,7 @@ public class LoadingFrame extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setLocation(new java.awt.Point(200, 200));
         setMinimumSize(new java.awt.Dimension(275, 90));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

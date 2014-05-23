@@ -443,18 +443,29 @@ public class SkyggeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_showSentenceInfoButtonActionPerformed
 
 
-    public void loadSentence(Sentence sentence) {
-        try {
-            sentenceAudioData = Utils.loadUrlIntoByteArray(sentence.getUrl());
-            for (int i = 0; i < sentenceAudioData.length; i++)
-                sentenceAudioData[i] += 128;
-            sentenceWaveFormPanel.setAudioData(sentenceAudioData);
+    public void loadSentence(final Sentence sentence) {
+        LoadingFrame.getInstance().setVisible(true);
+        
+        Thread r = new Thread() {
+            public void run() {
+                try {
+                    sentenceAudioData = Utils.loadUrlIntoByteArray(sentence.getUrl());
+                    for (int i = 0; i < sentenceAudioData.length; i++)
+                        sentenceAudioData[i] += 128;
+                    sentenceWaveFormPanel.setAudioData(sentenceAudioData);
 
-            sentenceInfoFrame.setInformation(sentence.getInformation());
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Unable to load sentence.", 
-                "IO Error", JOptionPane.ERROR_MESSAGE);
-        }
+                    sentenceInfoFrame.setInformation(sentence.getInformation());
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Unable to load sentence.", 
+                        "IO Error", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    
+                    LoadingFrame.getInstance().setVisible(false);
+            
+                }
+            }
+        };
+        r.start();
     }
 
 
