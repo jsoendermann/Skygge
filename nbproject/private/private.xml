@@ -5,13 +5,10 @@
         <group>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/Skygge.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/Utils.java</file>
-            <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/UI/SentenceInfoFrame.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/UI/WaveFormPanel.java</file>
-            <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/UI/LoadingFrame.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/SoundDeviceManager.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/SentencePack.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/UI/SentenceLibraryFrame.java</file>
-            <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/Sentence.java</file>
             <file>file:/Users/json/NetBeansProjects/Skygge/src/skygge/UI/SkyggeFrame.java</file>
         </group>
     </open-files>

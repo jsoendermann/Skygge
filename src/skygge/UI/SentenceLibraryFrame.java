@@ -52,7 +52,7 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         
         sentencePacks = new ArrayList<SentencePack>();
         
-        EventQueue.invokeLater(new Runnable() {
+        Thread t = new Thread() {
             public void run() {
                 try {
                     String sentenceDataString = Utils.loadUrlIntoString(URL_SENTENCE_DATA);
@@ -71,10 +71,16 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
                     for (int i = 0; i < sentencePacks.size(); i++) {
                         sentencePackListModel.addElement(sentencePacks.get(i));
                     }
-                    sentencePackList.setModel(sentencePackListModel);
                     
-                    sentencePackList.setSelectedIndex(0);
-                    sentencePackSelected(0);
+                    final DefaultListModel sentencePackListModelFinalCopy = sentencePackListModel;
+                    EventQueue.invokeLater(new Runnable() {
+                        public void run() {
+                            sentencePackList.setModel(sentencePackListModelFinalCopy);
+                    
+                            sentencePackList.setSelectedIndex(0);
+                            sentencePackSelected(0);
+                        }
+                    });
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(null, "Unable to load sentence library.", 
                         "IO Error", JOptionPane.ERROR_MESSAGE);
@@ -85,7 +91,8 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
                     // Change "Loading..." string in both lists to something else
                 }
             }
-        });
+        };
+        t.start();
         
     }
 
