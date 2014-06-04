@@ -33,6 +33,8 @@ public class SentenceInfoFrame extends javax.swing.JFrame {
      */
     public SentenceInfoFrame() {
         initComponents();
+        // TODO better status bar message that makes it clear that the user
+        // has to select text before pressing ctrl-c
     }
 
     /**
@@ -49,8 +51,7 @@ public class SentenceInfoFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setTitle("Sentence Info");
-        setMinimumSize(null);
-        setPreferredSize(new java.awt.Dimension(320, 145));
+        setLocation(new java.awt.Point(200, 200));
         setSize(new java.awt.Dimension(320, 140));
 
         jScrollPane1.setMinimumSize(null);
@@ -68,12 +69,14 @@ public class SentenceInfoFrame extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jLabel1.setText("Ctrl-c to copy.");
+        jLabel1.setText("Select text and press ctrl-c to copy.");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_END);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // TODO make sure this method updates (redraws?) the frame when the
+    // information changes
     public void setInformation(List<Entry<String, String>> information) {
         String s = "";
         
@@ -85,6 +88,8 @@ public class SentenceInfoFrame extends javax.swing.JFrame {
             
             infoTextArea.setText(s);
         }
+        
+        // TODO repaint/update
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
