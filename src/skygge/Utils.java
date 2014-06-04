@@ -74,6 +74,26 @@ public class Utils {
         return outputStream.toByteArray();
     }
     
+    public static byte[] loadResourceIntoByteArray(String resourcePath) throws IOException { 
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        InputStream inputStream = null;
+        
+        try {
+            inputStream = Skygge.class.getResourceAsStream(resourcePath);
+            byte[] byteChunk = new byte[8192];
+            int n;
+
+            while ((n = inputStream.read(byteChunk)) > 0 ) {
+                outputStream.write(byteChunk, 0, n);
+            }
+        } finally {
+            if (inputStream != null) { 
+                inputStream.close(); 
+            }
+        }
+        return outputStream.toByteArray();
+    }
+    
     public static String loadUrlIntoString(String urlString) throws IOException {
         return new String(loadUrlIntoByteArray(urlString));
     }
