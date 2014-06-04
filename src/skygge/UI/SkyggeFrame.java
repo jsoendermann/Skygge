@@ -192,7 +192,7 @@ public class SkyggeFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Skygge");
-        setLocation(new java.awt.Point(100, 100));
+        setLocation(new java.awt.Point(200, 200));
         setResizable(false);
 
         rootPanel.setLayout(new java.awt.BorderLayout());
