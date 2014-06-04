@@ -50,6 +50,8 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         
         this.skyggeFrame = skyggeFrame;
         
+        Utils.setIconOnFrame(this);
+        
         sentencePacks = new ArrayList<SentencePack>();
         
         Thread t = new Thread() {

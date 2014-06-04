@@ -21,6 +21,7 @@ package skygge.UI;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import skygge.Utils;
 
 /**
  *
@@ -33,8 +34,8 @@ public class SentenceInfoFrame extends javax.swing.JFrame {
      */
     public SentenceInfoFrame() {
         initComponents();
-        // TODO better status bar message that makes it clear that the user
-        // has to select text before pressing ctrl-c
+        
+        Utils.setIconOnFrame(this);
     }
 
     /**

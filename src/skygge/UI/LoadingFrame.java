@@ -18,6 +18,8 @@
 
 package skygge.UI;
 
+import skygge.Utils;
+
 /**
  *
  * @author json
@@ -29,6 +31,8 @@ public class LoadingFrame extends javax.swing.JFrame {
      */
     protected LoadingFrame() {
         initComponents();
+        
+        Utils.setIconOnFrame(this);
     }
     
     public static LoadingFrame getInstance() {

@@ -57,6 +57,8 @@ public class SkyggeFrame extends javax.swing.JFrame {
         checkForNewVersionAndUpdateMOTD();
         loadDefaultSentence();
         setUpHotkeys();
+        
+        Utils.setIconOnFrame(this);
     }
 
     // this is an asynchronous method

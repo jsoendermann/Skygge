@@ -18,14 +18,19 @@
 
 package skygge;
 
+import java.awt.Image;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import javax.sound.sampled.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
 
 public class Utils {
+    private static Image logoImage = null;
+        
     // TODO put this somewhere else or get rid of it
     // altogether
     // TODO get this from available formats for recording
@@ -96,5 +101,14 @@ public class Utils {
     
     public static String loadUrlIntoString(String urlString) throws IOException {
         return new String(loadUrlIntoByteArray(urlString));
+    }
+    
+    public static void setIconOnFrame(JFrame frame) {
+        if (logoImage == null) {
+            URL logoResourceURL = frame.getClass().getResource("/resources/SkyggeLogo.png");
+            ImageIcon logoImageIcon = new ImageIcon(logoResourceURL);
+            logoImage = logoImageIcon.getImage();
+        }
+        frame.setIconImage(logoImage);
     }
 }
