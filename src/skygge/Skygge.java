@@ -60,9 +60,12 @@ public class Skygge {
         SkyggeFrame frame = new SkyggeFrame();
         frame.setVisible(true);
         
-        // This starts the SoundDeviceManager thread.
-        // 
-        SoundDeviceManager.getInstance();
+        // TODO When recording for the first time since start up, the
+        // SoundDeviceManager always needs ~0.5s to start up. This fixes
+        // that problem, but it would be better to find the root cause
+        // of it.
+        SoundDeviceManager.getInstance().startRecording();
+        SoundDeviceManager.getInstance().stopEverything();
     }
     
 }
