@@ -110,10 +110,13 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         openButton = new javax.swing.JButton();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jSplitPane2 = new javax.swing.JSplitPane();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        sentenceCollectionList = new javax.swing.JList();
+        jSplitPane3 = new javax.swing.JSplitPane();
+        jScrollPane4 = new javax.swing.JScrollPane();
         sentencePackList = new javax.swing.JList();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane5 = new javax.swing.JScrollPane();
         sentenceList = new javax.swing.JList();
 
         setLocation(new java.awt.Point(100, 100));
@@ -140,40 +143,49 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
-        jSplitPane1.setDividerLocation(100);
-        jSplitPane1.setDividerSize(5);
-        jSplitPane1.setMinimumSize(new java.awt.Dimension(500, 300));
-        jSplitPane1.setPreferredSize(new java.awt.Dimension(500, 300));
+        jSplitPane2.setDividerLocation(100);
+        jSplitPane2.setPreferredSize(new java.awt.Dimension(162, 300));
+
+        jScrollPane3.setMinimumSize(new java.awt.Dimension(50, 23));
+        jScrollPane3.setPreferredSize(new java.awt.Dimension(50, 140));
+        jScrollPane3.setSize(new java.awt.Dimension(50, 140));
+
+        sentenceCollectionList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Custom", "Mandarin", "Japanese", "German", "English", "Cantonese" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        sentenceCollectionList.setMaximumSize(new java.awt.Dimension(100, 85));
+        sentenceCollectionList.setMinimumSize(new java.awt.Dimension(50, 85));
+        sentenceCollectionList.setPreferredSize(new java.awt.Dimension(50, 85));
+        sentenceCollectionList.setSize(new java.awt.Dimension(50, 136));
+        jScrollPane3.setViewportView(sentenceCollectionList);
+
+        jSplitPane2.setLeftComponent(jScrollPane3);
+
+        jSplitPane3.setDividerLocation(120);
 
         sentencePackList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Loading..." };
+            String[] strings = { "Animals 2", "Ships", "At the Doctor's", "Japan" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        sentencePackList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                sentencePackListValueChanged(evt);
-            }
-        });
-        jScrollPane1.setViewportView(sentencePackList);
+        jScrollPane4.setViewportView(sentencePackList);
 
-        jSplitPane1.setLeftComponent(jScrollPane1);
+        jSplitPane3.setLeftComponent(jScrollPane4);
 
         sentenceList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Loading..." };
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        sentenceList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                sentenceListMouseClicked(evt);
-            }
-        });
-        jScrollPane2.setViewportView(sentenceList);
+        jScrollPane5.setViewportView(sentenceList);
 
-        jSplitPane1.setRightComponent(jScrollPane2);
+        jSplitPane3.setRightComponent(jScrollPane5);
 
-        getContentPane().add(jSplitPane1, java.awt.BorderLayout.CENTER);
+        jSplitPane2.setRightComponent(jSplitPane3);
+
+        getContentPane().add(jSplitPane2, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -185,18 +197,6 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void sentencePackListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_sentencePackListValueChanged
-        int index = sentencePackList.getSelectedIndex();
-        sentencePackSelected(index);
-        
-    }//GEN-LAST:event_sentencePackListValueChanged
-
-    private void sentenceListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sentenceListMouseClicked
-        if (evt.getClickCount() == 2) {
-            loadSentence();
-        }
-    }//GEN-LAST:event_sentenceListMouseClicked
 
     private void loadSentence() {
         Sentence selectedSentence = (Sentence)sentenceList.getSelectedValue();
@@ -218,10 +218,13 @@ public class SentenceLibraryFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JSplitPane jSplitPane2;
+    private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JButton openButton;
+    private javax.swing.JList sentenceCollectionList;
     private javax.swing.JList sentenceList;
     private javax.swing.JList sentencePackList;
     // End of variables declaration//GEN-END:variables
